@@ -1,0 +1,266 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>PokéChart</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="css/jquery.dataTables.css">
+    <script src="js/jquery-1.10.2.js"></script>
+    <script src="js/jquery-ui.js"></script>
+    <script src="js/jquery.dataTables.js"></script>
+    <script src="js/Chart.js"></script>
+    <script src="pokedex/pokedexjs.js"></script>
+    <script src="js/amcharts/amcharts.js"></script>
+    <script src="js/amcharts/serial.js"></script>
+    <script src="js/amcharts/themes/light.js"></script>
+    <script>
+    $(function(){
+        $('[id^="pokeimport_"]').each(function(){
+            $(this).load($(this).attr('id').replace('pokeimport_','') + '.html');
+        });
+    });
+    </script>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+    <div id='pokeimport_header'></div>
+    <div id='body2'><!-- This is the body of the page-->
+        <div id='pokePage'>
+            <div style="display:none" id="dvloader"><img src="images/loading.gif" /></div>
+            <div id='name'></div>
+            <div id='pic'></div>
+            <div id='infoblock1'>Information</div>
+            <div id='infoblock2'>Info2</div>
+            <div id='ability'>Abilities</div>
+            <div id='evolution'>Evolutions</div>
+            <div id='stats'>Stats</div>
+            <canvas id="myChart" width="400" height="400"></canvas>
+            <div id="barChart"></div>
+            <table id='moves'>
+                <tr>
+                    <th>Attack Name</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Level</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    $(document).ready(function() {
+        $('#dvloader').show();
+        getData();
+    });
+
+    function getData() {
+
+        var pokeId = getUrlParameter('id');
+
+        if ($.isNumeric(pokeId) == false) {
+            $('#pokePage').empty();
+            $('#pokePage').load('404.html');
+            return false;
+        }
+
+        //rajouter une image de loading pour faire joli
+        $.ajax({
+            url: 'https://pokeapi.co/api/v2/pokemon/' + pokeId + '/', 
+            method: 'GET',
+            dataType: 'json',
+            success: function(result) {
+                                
+                fillNameDiv(toTitleCase(result.name));
+                addPic(result.sprites.front_default);
+
+                drawChart(result.stats);
+                drawBarChart();
+                drawTable(result.moves);
+
+                $('#dvloader').hide();
+            }
+        });
+    }
+
+    function drawBarChart() {
+
+         var chart = AmCharts.makeChart("barChart", {
+            "type": "serial",
+            "theme": "light",  
+            "handDrawn":true,
+            "handDrawScatter":2,
+            "legend": {
+                "useGraphSettings": true,
+                "markerSize":12,
+                "valueWidth":0,
+                "verticalGap":0
+            },
+            "dataProvider": [{
+                "year": "HP",
+                "income": 26.5,
+                "expenses": 23.1
+            }, {
+                "year": "ATK",
+                "income": 24.6,
+                "expenses": 22
+            }],
+            "valueAxes": [{
+                "minorGridAlpha": 0.08,
+                "minorGridEnabled": true,
+                "position": "top",
+                "axisAlpha":0
+            }],
+            "startDuration": 1,
+            "graphs": [{
+                "balloonText": "<span style='font-size:13px;'>[[title]] in [[category]]:<b>[[value]]</b></span>",
+                "title": "Income",
+                "type": "column",
+                "fillAlphas": 0.8,
+                 
+                "valueField": "income"
+            }, {
+                "balloonText": "<span style='font-size:13px;'>[[title]] in [[category]]:<b>[[value]]</b></span>",
+                "bullet": "round",
+                "bulletBorderAlpha": 1,
+                "bulletColor": "#FFFFFF",
+                "useLineColorForBulletBorder": true,
+                "fillAlphas": 0,
+                "lineThickness": 2,
+                "lineAlpha": 1,
+                "bulletSize": 7,
+                "title": "Expenses",
+                "valueField": "expenses"
+            }],
+            "rotate": true,
+            "categoryField": "year",
+            "categoryAxis": {
+                "gridPosition": "start"
+            },
+            "export": {
+                "enabled": true
+             }
+        });
+    }
+
+
+    function drawChart(arrayStats) {
+
+        var dataArray = [];
+        var labelArray = [];
+
+        for (var i=0; i < arrayStats.length; i++) {
+            dataArray.push(arrayStats[i].base_stat);
+            labelArray.push(toTitleCase(arrayStats[i].stat.name));
+        }
+
+        var data = {
+            labels: labelArray,
+            datasets: [
+                {
+                    label: "Pokemon Stats",                    
+                    fillColor: "rgba(151,187,205,0.2)",
+                    strokeColor: "rgba(151,187,205,1)",
+                    pointColor: "rgba(151,187,205,1)",
+                    pointStrokeColor: "#fff",
+                    pointHighlightFill: "#fff",
+                    pointHighlightStroke: "rgba(151,187,205,1)",
+                    data: dataArray
+                }
+            ]
+        };
+
+        var ctx = $("#myChart").get(0).getContext("2d");
+        // This will get the first returned node in the jQuery collection.
+        var myRadarChart = new Chart(ctx).Radar(data);
+    }
+
+    function fillNameDiv(sName) {
+        $('#name').append(sName);
+    }
+
+    function addPic(sUrl) {
+        $('#pic').append('<img src="'+ sUrl +'"/>');
+    }
+
+    function drawTable(arrayMoves) {
+
+        for (var i=0; i < arrayMoves.length; i++) {
+            //faire un tri des données à récupérer
+            for (var j=0; j < arrayMoves[i].version_group_details.length; j++) {
+
+                if (arrayMoves[i].version_group_details[j].version_group.name == 'omega-ruby-alpha-sapphire') {
+
+                    drawRow({
+                        move: arrayMoves[i].move,
+                        details: arrayMoves[i].version_group_details[j]
+                    });
+                }
+            }
+        }
+    }
+
+    function drawRow(arrayElem) {
+
+        var row = $('<tr/>');
+        $('#moves').append(row);
+
+        row.append($("<td>" + toTitleCase(arrayElem.move.name) + "</td>"));
+        getMoveType(arrayElem.move.url, row);
+        getMoveDescription(arrayElem.move.url, row);
+        //row.append($("<td>" + rowData.firstName + "</td>"));
+        //row.append($("<td>" + rowData.lastName + "</td>"));
+
+    }
+
+
+    /* Returns the type of a move and appends it to the table */
+    function getMoveType(sUrl, row) {
+
+        $.ajax({
+            url: sUrl, 
+            method: 'GET',
+            dataType: 'json',            
+            success: function(result) {
+                row.append($("<td><img src='./images/types/" + toTitleCase(result.type.name) + ".gif'/></td>"));
+            }
+        });
+    }
+    /* Returns the type of a move and appends it to the table */
+    function getMoveDescription(sUrl, row) {
+        $.ajax({
+            url: sUrl, 
+            method: 'GET',
+            dataType: 'json',            
+            success: function(result) {
+                row.append($("<td>" + toTitleCase(result.effect_entries[0].effect) + "</td>"));
+            }
+        });
+    }
+
+
+    function getUrlParameter(sParam) {
+        var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : sParameterName[1];
+            }
+        }
+    };
+
+
+    function toTitleCase(str) {
+        return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+    }
+    
+</script>

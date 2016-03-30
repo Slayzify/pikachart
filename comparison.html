@@ -1,0 +1,41 @@
+<html>
+<head>
+	<title>PokéChart</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="css/jquery.dataTables.css">
+    <script src="js/jquery-1.10.2.js"></script>
+    <script src="js/jquery-ui.js"></script>
+    <script src="js/jquery.dataTables.js"></script>
+    <script src="js/Chart.js"></script>
+    <script src="pokedex/pokedexjs.js"></script>
+    <script src="js/amcharts/amcharts.js"></script>
+    <script src="js/amcharts/serial.js"></script>
+    <script src="js/amcharts/themes/light.js"></script>
+    <script src="js/poke_functions.js"></script>
+    <script src="js/poke_load.js"></script>
+    <script>
+    </script>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+    <div id='pokeimport_header'></div>
+        <div id='body2'><!-- This is the body of the page-->
+            <div id='comparison_container'>
+                <br/>
+                <div class='pokecomparator'>
+                    <span id='search_pokemon'>Search : <input type='text' id='poke_search_left' class='poke_input' onkeyup="searchPoke(this,'poke_search','poke_selection','.poke_button')"/></span>
+                    <div id='comparison_poke_selection_left' class='poke_selection'>
+                    </div>
+                </div>
+                <div class='pokecomparator'>
+                    <span id='search_pokemon'>Search : <input type='text' id='poke_search_right' class='poke_input' onkeyup="searchPoke(this,'poke_search','poke_selection','.poke_button')"/></span>
+                    <div id='comparison_poke_selection_right' class='poke_selection'>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+</html>

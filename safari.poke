@@ -1,0 +1,56 @@
+<div id='safari_zone' class='ui-widget-content' >
+                <script>
+                $(function(){
+                    $('[id^="poke_selection_"]').each(function(){
+                        loadSelectionPanel($(this));
+                    });
+                });
+
+                function loadSelectionPanel(panel){
+                    for (i=0; i < dataSet.length;i++){
+                        var pokemonbutton = $('<a id="' + dataSet[i][5] + '_' + $(dataSet[i][2]).html() + '" class="pokemon404" href="' + $(dataSet[i][2]).attr('href') + '">' + '<img src="' + $(dataSet[i][1]).attr("src") + '"/></a>');
+                        /*$('<input type="image" id="'+ dataSet[i][5] + '_' + $(dataSet[i][2]).html() + '" class="poke_button" ' +' title="' + $(dataSet[i][2]).html()  + '" src="' + $(dataSet[i][1]).attr("src") + '" />')*/
+                        panel.append(pokemonbutton);
+                    }
+                };
+                    $(function() {
+                        $( "#safari_zone" ).draggable();
+                    });
+                    
+                    function pokeballGo(){
+                        if ($('#safari_park').css('display') == 'none'){
+                            $('#safari_park').show();
+                        }
+                        else {
+                            $('#safari_park').hide();
+                        }
+                        
+                        function searchPoke(pokeName,searchbarid,pokemoncontainer,pokemonclass){
+                            /*Here's an exemple
+                            pokename : instance of search bar
+                            searchbarid : poke_search_left
+                            pokemoncontainer : poke_selection_left
+                            pokemonclass : poke_button
+                            */
+                            var name = pokeName.value;
+                            var pokeList = $("#" + pokeName.id.replace(searchbarid, pokemoncontainer)).find(pokemonclass);
+                            pokeList.each(function(index, pokemon){
+
+                                if(pokemon.id.toLowerCase().indexOf(name.toLowerCase()) > -1){
+                                    pokemon.style.display = 'inline-block';
+                                }
+                                else{
+                                    pokemon.style.display = 'none';
+                                }
+                            })
+                        }
+                        
+                    };
+                </script>
+            <input type='image' id='pokeball_go' class='' src='./images/pokeball_go.png' title='Pokeball Go!' onclick='pokeballGo()'/>
+                <div id='safari_park' style='display:none'>
+                    <span id='search_pokemon'>Search : <input type='text' id='poke_search_large' class='poke_input' onkeyup="searchPoke(this,'poke_search','poke_selection','pokemon404')"/></span>
+                    <div id='poke_selection_large' class='poke_selection'>
+                    </div>
+                </div>
+            </div>

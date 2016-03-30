@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>PikaChart</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png" />
+    <link rel="stylesheet" href="css/jquery-ui.css">
+    <link rel="stylesheet" href="css/jquery.dataTables.css">
+    <script src="js/jquery-1.10.2.js"></script>
+    <script src="js/jquery-ui.js"></script>
+    <script src="js/jquery.dataTables.js"></script>
+    <script src="js/Chart.js"></script>
+    <script src="pokedex/pokedexjs.js"></script>
+    <script src="js/amcharts/amcharts.js"></script>
+    <script src="js/amcharts/serial.js"></script>
+    <script src="js/amcharts/themes/light.js"></script>
+    <script src="js/poke_functions.js"></script>
+    <script src="js/poke_load.js"></script>
+    <script src="js/poke.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+    <div id='pokeimport_header'></div>
+    <div id='body2'><!-- This is the body of the page-->
+        <div id='pokePage'>
+            <div style='display:none' id='dvloader'><img src='images/loading.gif'/></div>
+            <div id='name'></div>
+            <div id='pic'></div>
+            <div id='infoblock1'></div>
+            <div id='infoblock2'></div>
+            <div id='ability'></div>
+            <div id='evolutionChain'>
+                <table id='evolutionTable' style='width:100%'>
+                    <tr id='picRow'></tr>
+                    <tr id='textRow'></tr>
+                </table>
+            </div>
+            <div id='stats'></div>
+            <div id='spiderChart'>
+                <canvas id="myChart" height=350 width=350></canvas>
+            </div>
+            <div id="barChart"></div>            
+            <div id="pokemoves">
+                <table id='moves'>
+                    <tr>
+                        <th class'move_header'>Name</th>
+                        <th class'move_header'>Type</th>
+                        <th class'move_header'>PP</th>
+                        <th class'move_header'>Power</th>
+                        <th class'move_header'>Effect</th>
+                        <th class'move_header'>Level</th>
+                        <th class'move_header'>Method</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    $(document).ready(function() {
+        $('#dvloader').show();
+        getData();
+    });
+
+
+    
+</script>
