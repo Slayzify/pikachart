@@ -69,40 +69,40 @@
 
         try{
             if (conditionsArray[0].condition == 'item')
-                finalString += toTitleCase(pokename) + ' needs ' + conditionsArray[0].value.name + ' to evolve. ';
+                finalString += 'Needs ' + conditionsArray[0].value.name + ' to evolve. ';
 
             if (conditionsArray[0].condition == 'trigger' && conditionsArray[0].value.name != 'level-up')
-                finalString += toTitleCase(pokename) + ' needs ' + conditionsArray[0].value.name + ' to evolve. ';
+                finalString += 'Needs ' + conditionsArray[0].value.name + ' to evolve. ';
 
             if (conditionsArray[0].condition == '0')
-                finalString += toTitleCase(pokename) + ' evolves near ' + conditionsArray[0].value.location.name + '. ';
+                finalString += 'Evolves near ' + conditionsArray[0].value.location.name + '. ';
 
             if (conditionsArray[0].condition == 'trigger' && conditionsArray[1].condition == 'min_level')
-                finalString += toTitleCase(pokename) + ' needs to be at least level ' + conditionsArray[1].value + ' to evolve. ';
+                finalString += 'Needs to be at least level ' + conditionsArray[1].value + ' to evolve. ';
 
             if (conditionsArray[0].condition == 'trigger' && conditionsArray[1].condition == 'min_happiness')
-                finalString += toTitleCase(pokename) + ' needs at least ' + conditionsArray[1].value + ' hapiness to evolve. ';
+                finalString += 'Needs at least ' + conditionsArray[1].value + ' hapiness to evolve. ';
 
             if (conditionsArray[0].condition == 'trigger' && conditionsArray[1].condition == 'known_move_type')
-                finalString += toTitleCase(pokename) + ' needs a ' + conditionsArray[1].value.name + ' type move to evolve. ';
+                finalString += 'Needs a ' + conditionsArray[1].value.name + ' type move to evolve. ';
 
             if (conditionsArray[0].condition == 'trigger' && conditionsArray[1].condition == 'held_item')
-                finalString += toTitleCase(pokename) + ' needs to hold ' + conditionsArray[1].value.name + ' to evolve. ';
+                finalString += 'Needs to hold ' + conditionsArray[1].value.name + ' to evolve. ';
 
             if (conditionsArray[0].condition == 'trigger' && conditionsArray[1].condition == 'known_move')
-                finalString += toTitleCase(pokename) + ' needs to know ' + conditionsArray[1].value.name + ' move to evolve. ';
+                finalString += 'Needs to know ' + conditionsArray[1].value.name + ' move to evolve. ';
 
             if (conditionsArray[0].condition == 'trigger' && conditionsArray[2].condition == 'time_of_day')
-                finalString += toTitleCase(pokename) + ' evolves on ' + conditionsArray[2].value + ' only. ';
+                finalString += 'Evolves on ' + conditionsArray[2].value + ' only. ';
 
             if (conditionsArray[0].condition == 'trigger' && conditionsArray[2].condition == 'min_affection')
-                finalString += toTitleCase(pokename) + ' needs at least ' + conditionsArray[2].value + ' affection to evolve. ';
+                finalString += 'Needs at least ' + conditionsArray[2].value + ' affection to evolve. ';
 
             if (conditionsArray[1].condition == '1')
-                finalString += toTitleCase(pokename) + ' evolves near ' + conditionsArray[1].value.location.name + '. ';
+                finalString += 'Evolves near ' + conditionsArray[1].value.location.name + '. ';
 
             if (conditionsArray[2].condition == '2')
-                finalString += toTitleCase(pokename) + ' evolves near ' + conditionsArray[2].value.location.name + '. ';
+                finalString += 'Evolves near ' + conditionsArray[2].value.location.name + '. ';
 
             if (conditionsArray[2].condition == 'relative_physical_stats' && conditionsArray[2].value == 1)
                 finalString += 'Attack value superior to Defense value. ';
@@ -166,12 +166,12 @@
                 "verticalGap":0
             },
             "dataProvider": [{
-                "year": "HP",
-                "income": 26.5,
+                "stat": "HP",
+                "value": 50,
                 "expenses": 23.1
             }, {
-                "year": "ATK",
-                "income": 24.6,
+                "stat": "ATK",
+                "value": 35,
                 "expenses": 22
             }],
             "valueAxes": [{
@@ -183,12 +183,11 @@
             "startDuration": 1,
             "graphs": [{
                 "balloonText": "<span style='font-size:13px;'>[[title]] in [[category]]:<b>[[value]]</b></span>",
-                "title": "Income",
+                "title": "Value",
                 "type": "column",
                 "fillAlphas": 0.8,
-                 
-                "valueField": "income"
-            }, {
+                "valueField": "value"
+            }/*, {
                 "balloonText": "<span style='font-size:13px;'>[[title]] in [[category]]:<b>[[value]]</b></span>",
                 "bullet": "round",
                 "bulletBorderAlpha": 1,
@@ -200,9 +199,9 @@
                 "bulletSize": 7,
                 "title": "Expenses",
                 "valueField": "expenses"
-            }],
+            }*/],
             "rotate": true,
-            "categoryField": "year",
+            "categoryField": "stat",
             "categoryAxis": {
                 "gridPosition": "start"
             },
