@@ -1,6 +1,6 @@
-    function getEvolutionChain(sUrl, pokeId) {
+function getEvolutionChain(sUrl, pokeId) {
 
-        $.ajax({
+    $.ajax({
             url: secureAPI(sUrl), 
             method: 'GET',
             dataType: 'json',            
@@ -215,11 +215,11 @@
     function drawChart(arrayStats) {
 
         var dataArray = [];
-        var labelArray = [];
+        var labelArray = ["Spd","Sp.Def","Sp.Atk","Def","Atk","HP"];
 
         for (var i=0; i < arrayStats.length; i++) {
             dataArray.push(arrayStats[i].base_stat);
-            labelArray.push(toTitleCase(arrayStats[i].stat.name));
+            //labelArray.push(toTitleCase(arrayStats[i].stat.name));
         }
 
         var data = {

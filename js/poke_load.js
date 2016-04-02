@@ -31,10 +31,18 @@ $(function(){
     });
 });
 
+    /**** Custom_stats ****/
 
+$(function(){
+    $('[id^="custom_stats_"]').each(function(){
+        if($(this).attr('id').indexOf('_Side') > -1){
+            console.log("changing side " + $(this).parent().parent().attr("id"));
+            $(this).attr('id', $(this).attr('id').replace('_Side', $(this).parent().parent().attr('id').replace('pokemon_content_','')));
+        }
+    });
+});
 
     /**** Pokemon ****/
-
 
     /**** Index ****/
 $(function() {

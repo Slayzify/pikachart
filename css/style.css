@@ -246,3 +246,11 @@ search_pokemon{
 [draggable=true] {
     cursor: move;
 }
+
+.stat_value{
+    width:40px;
+}
+
+.pokemon_content{
+    width: 100%;
+}
