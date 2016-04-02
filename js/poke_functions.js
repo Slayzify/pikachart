@@ -208,6 +208,7 @@ function setStats(container, statsval, pokemon){
     var stats = ["spd","spdef","spatk","def","atk","hp"];
     var statsnames = ["Spd","Sp.Def","Sp.Atk","Def","Atk","HP"];
     var singlestat = "<div id='poke_stats_%Name' class='stat_container'><span id='stat_name_%Name'>%StatName :</span> <input id='stat_value_%Name' class='stat_value' type='text' value='%Stat_val' readonly='readonly'/></div>";
+    var modifier = "";
     var radar = $("<canvas id='" + pokemon + "-" + $(container).attr('id').replace("custom_stats_","") + "-Radar' height=" + calcHeight($(window).height()) + "  width=" + calcWidth(container.width()) + "></canvas>");
     container.append(radar);
     for (var i = 0; i < stats.length; i++){
