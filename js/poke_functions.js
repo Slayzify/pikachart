@@ -99,22 +99,22 @@ function drawChart(arrayStats, chart_container) {
 
 function calcHeight(height){
     var scr_height = height;
-    if (scr_height <= 500)
-        return ((scr_height - 100) <= 0 )? scr_height : (scr_height - 100);
+    //if (scr_height <= 500)
+        //return ((scr_height - 100) <= 0 )? scr_height : (scr_height - 100);
     if (scr_height == 0)
         return scr_height;
     else
-        return scr_height / Math.floor(scr_height / 400);
+        return scr_height / Math.floor(scr_height / 350);
 }
 
 function calcWidth(width){
     var scr_width = width;
-    if (scr_width <= 500)
-        return ((scr_width - 100) <= 0 )? scr_width : (scr_width - 100);
+    //if (scr_width <= 500)
+        //return ((scr_width - 100) <= 0 )? scr_width : (scr_width - 100);
     if (scr_width == 0)
         return scr_width;
     else
-        return scr_width / Math.floor(scr_width / 400);
+        return scr_width / Math.floor(scr_width / 350);
 }
 
 
