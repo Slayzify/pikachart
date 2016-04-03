@@ -285,15 +285,16 @@ search_pokemon{
     color: #505050;
     text-shadow: 2px 2px #ffffff;
     text-align: center;
+    align-content: center;
 }
 
 [id^=pokeID] img{
-    float:left;
+    /*float:left;*/
 }
 
 [id^=pokeID] p{
-    float:left;
-    margin-left: 15px;
+    /*float:left;*/
+    /*margin-left: 15px;*/
 }
 
 [id^="pokeID"][id$="-mega"]{

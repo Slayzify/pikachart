@@ -199,7 +199,7 @@ function getContainerSide(container){
 
 function setPokeData(container, statsval, pokemon, name){
     container.empty();
-    container.append($("<div id='pokeID-"+ name +"' class='hm'><img src='http://pokeapi.co/media/sprites/pokemon/" + pokemon.id + ".png'/><p>" +  toTitleCase(name) + "</p></div>"));
+    container.append($("<div id='pokeID-"+ name +"' class='hm'><p>" + toTitleCase(name) + "</p><br/><img src='http://pokeapi.co/media/sprites/pokemon/" + pokemon.id + ".png'/></div>"));
     var stats = ["spd","spdef","spatk","def","atk","hp"];
     var statsnames = ["Spd","Sp.Def","Sp.Atk","Def","Atk","HP"];
     var statstable = $("<table id='statstable'><tr><th>Stat</th><th title='Base Stat'>BS</th><th title='Individual Values'>IV</th><th title='Effort Values'>EV</th><th>Value</th></tr></table>")
@@ -207,6 +207,7 @@ function setPokeData(container, statsval, pokemon, name){
     var singlestat = "<tr id='%Pokemon_poke_stats_%Name_c'><th>%StatName :</th><td><input id='%Pokemon_bs_%Name' class='stat_value' type='text' value='%Stat_val' readonly='readonly'/></td><td><input id='%Pokemon_iv_%Name' class='stat_value' type='text' value='0'/></td><td><input id='%Pokemon_ev_%Name' class='stat_value' type='text' value='0' /></td><td><input id='%Pokemon_sv_%Name' class='stat_value' type='text' value='%Stat_calc' readonly='readonly'/></td></tr>";
     var movetable = "<div id='pokemoves_%Side' class='hm'><table id='moves_%Side'><tr><th class'move_header'>Name</th><th class'move_header'>Type</th><th class'move_header'>PP</th><th class'move_header'>Power</th><th class'move_header'>Effect</th><th class'move_header'>Level</th><th class'move_header'>Method</th></tr></table></div>";
     var radar = $("<canvas id='" + name + "-" + $(container).attr('id').replace("custom_stats_","") + "-Radar' height=" + calcHeight($(window).height()) + "  width=" + calcWidth(container.width()) + "></canvas>");
+    container.append($("<br/>"))
     container.append(radar);
     for (var i = 0; i < stats.length; i++){
         var children = $(singlestat.replace(/%Name/g,stats[i]).replace(/%StatName/g,statsnames[i]).replace(/%Stat_val/g,statsval[i]).replace(/%Pokemon/g,name + "_" + getContainerSide(container)).replace(/%Stat_calc/g,calcStat(parseInt(statsval[i]),0,0,1,1,(i < (stats.lengh-1)))));
