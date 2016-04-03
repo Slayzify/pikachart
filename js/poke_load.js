@@ -36,11 +36,22 @@ $(function(){
 $(function(){
     $('[id^="custom_stats_"]').each(function(){
         if($(this).attr('id').indexOf('_Side') > -1){
-            console.log("changing side " + $(this).parent().parent().attr("id"));
             $(this).attr('id', $(this).attr('id').replace('_Side', $(this).parent().parent().attr('id').replace('pokemon_content_','')));
         }
     });
 });
+
+/*$(function(){
+    $('.stat_value').keypress(function (e) {
+        alert();
+     //if the letter is not digit then display error and don't type anything
+     if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+        //display error message
+        $("#errmsg").html("Digits Only").show().fadeOut("slow");
+               return false;
+    }
+   });
+});*/
 
     /**** Pokemon ****/
 

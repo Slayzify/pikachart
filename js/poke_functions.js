@@ -164,6 +164,7 @@ function loadCprPokemon(iptPoke){
 function selectPoke(poke){
     var custom_stats = editableZone(poke);
     var loadinggif = $("<img id='loading' class='hm' alt='Loading... PLease wait' src='images/Loading.gif'/>");
+    custom_stats.empty();
     custom_stats.prepend(loadinggif);
     $.ajax({
             url: 'https://pokeapi.co/api/v2/pokemon/' + $(poke).attr('id').split('_')[0] + '/', 
@@ -198,46 +199,151 @@ function getContainerSide(container){
 
 function setPokeData(container, statsval, pokemon, name){
     container.empty();
-    container.append($("<p id='pokeID-"+ name +"' class='hm'>" + toTitleCase(name) + "</p>"));
+    container.append($("<div id='pokeID-"+ name +"' class='hm'><img src='http://pokeapi.co/media/sprites/pokemon/" + pokemon.id + ".png'/><p>" +  toTitleCase(name) + "</p></div>"));
     var stats = ["spd","spdef","spatk","def","atk","hp"];
     var statsnames = ["Spd","Sp.Def","Sp.Atk","Def","Atk","HP"];
-    var singlestat = "<div id='poke_stats_%Name' class='stat_container'><span id='stat_name_%Name'>%StatName :</span> <input id='stat_value_%Name' class='stat_value' type='text' value='%Stat_val' readonly='readonly'/></div>";
-    var modifier = ""; //a compléter pour ajouter le calculateur de stats
-    var movetable = "<div id='pokemoves_%Side'><table id='moves_%Side'><tr><th class'move_header'>Name</th><th class'move_header'>Type</th><th class'move_header'>PP</th><th class'move_header'>Power</th><th class'move_header'>Effect</th><th class'move_header'>Level</th><th class'move_header'>Method</th></tr></table></div>";
+    var statstable = $("<table id='statstable'><tr><th>Stat</th><th title='Base Stat'>BS</th><th title='Individual Values'>IV</th><th title='Effort Values'>EV</th><th>Value</th></tr></table>")
+    //var singlestat = "<div id='poke_stats_%Name' class='stat_container'><span id='stat_name_%Name'>%StatName :</span> <input id='stat_value_%Name' class='stat_value' type='text' value='%Stat_val' readonly='readonly'/></div>";
+    var singlestat = "<tr id='%Pokemon_poke_stats_%Name_c'><th>%StatName :</th><td><input id='%Pokemon_bs_%Name' class='stat_value' type='text' value='%Stat_val' readonly='readonly'/></td><td><input id='%Pokemon_iv_%Name' class='stat_value' type='text' value='0'/></td><td><input id='%Pokemon_ev_%Name' class='stat_value' type='text' value='0' /></td><td><input id='%Pokemon_sv_%Name' class='stat_value' type='text' value='%Stat_calc' readonly='readonly'/></td></tr>";
+    var movetable = "<div id='pokemoves_%Side' class='hm'><table id='moves_%Side'><tr><th class'move_header'>Name</th><th class'move_header'>Type</th><th class'move_header'>PP</th><th class'move_header'>Power</th><th class'move_header'>Effect</th><th class'move_header'>Level</th><th class'move_header'>Method</th></tr></table></div>";
     var radar = $("<canvas id='" + name + "-" + $(container).attr('id').replace("custom_stats_","") + "-Radar' height=" + calcHeight($(window).height()) + "  width=" + calcWidth(container.width()) + "></canvas>");
     container.append(radar);
     for (var i = 0; i < stats.length; i++){
-        var children = $(singlestat.replace('%Name',stats[i]).replace("%StatName",statsnames[i]).replace("%Stat_val",statsval[i]));
-        //children.append(modifier);
-        container.append(children);
+        var children = $(singlestat.replace(/%Name/g,stats[i]).replace(/%StatName/g,statsnames[i]).replace(/%Stat_val/g,statsval[i]).replace(/%Pokemon/g,name + "_" + getContainerSide(container)).replace(/%Stat_calc/g,calcStat(parseInt(statsval[i]),0,0,1,1,(i < (stats.lengh-1)))));
+        statstable.append(children);
     }
+    var ns = $(("<tr id='%Pokemon_poke_stats_ns_c'><th>Nature :</th><td><select id='%Pokemon_ns'/></td></tr>").replace(/%Pokemon/g,name + "_" + getContainerSide(container)));
+    statstable.append(ns);
+    var lvl = $(("<tr id='%Pokemon_poke_stats_lvl_c'><th>Level :</th><td><input id='%Pokemon_lvl' class='stat_value' type='text' value='1' /></td></tr>").replace(/%Pokemon/g,name + "_" + getContainerSide(container)));
+    statstable.append(lvl);
+    container.append(statstable);
     container.append($("<br/>"))
-    var moves = $(movetable.replace("%Side", getContainerSide(container)).replace("%Side", getContainerSide(container)));
+    //var moves = $(movetable.replace("%Side", getContainerSide(container)).replace("%Side", getContainerSide(container)));
+    var moves = $(movetable.replace(/%Side/g, getContainerSide(container)));
     container.append(moves);
     drawMoveTable(moves.find("#moves_" + getContainerSide(container)), pokemon.moves);
+    
+    
+    $('.stat_value').keypress(function (e) {
+     //if the letter is not digit then display error and don't type anything
+        if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+            //display error message
+            $("#errmsg").html("Digits Only").show().fadeOut("slow");
+            return false;
+         }
+    });
+    /*$('.stat_value').focusout(function (e) {
+     //if the letter is not digit then display error and don't type anything
+        if($(this).attr('id').substr("_lvl") > -1){
+            if($(this).val().trim() == "" || parseInt($(this).val()) < 1)
+                $(this).val('1');
+            else{
+                if(parseInt($(this).val()) > 100)
+                    $(this).val('100');
+            }
+        }
+        else{
+            if($(this).val().trim() == "")
+                $(this).val('0');
+            else{
+                if(parseInt($(this).val()) > 252)
+                    $(this).val('252');
+            }
+        }   
+        
+    });*/
+    $('.stat_value').keyup(function (e) {
+        if($(this).attr('id').indexOf("_lvl") > -1){
+            if($(this).val().trim() == "" || parseInt($(this).val()) < 1)
+                $(this).val('1');
+            else{
+                if(parseInt($(this).val()) > 100)
+                    $(this).val('100');
+            }
+        }
+        else{
+            if($(this).val().trim() == "")
+                $(this).val('0');
+            else{
+                if(parseInt($(this).val()) > 252)
+                    $(this).val('252');
+            }
+        }
+        processStats($(this));
+    });
+    
     return radar;
 }
 
-function updateStat(origin){
-    $(this)
+//*******************************************
+
+function processStats(IEV){
     
+    var tablestat = $(IEV).parent().parent().parent().parent();
+    //var rowstat = $(IEV).parent().parent();
+    
+    var bs6 = fillStats(tablestat.find('[id*="_bs_"]'));
+    var iv6 = fillStats(tablestat.find('[id*="_iv_"]'));
+    var ev6 = fillStats(tablestat.find('[id*="_ev_"]'));
+    
+    var isHP = $(IEV).attr('id').indexOf("_hp") > -1;
+    var lvl = parseInt(tablestat.find('[id$="_lvl"]').val());
+    var ns = 1;//tablestat.find('[id$="_ns"]');
+    
+    
+    /*for (var i = 0; i<6;i++){
+        var bs = parseInt(bs6[i]);
+        var iv = parseInt(iv6[i]);
+        var ev = parseInt(ev6[i]);
+        var ns = 1;//tablestat.find('[id$="_ns"]');
+        var vs = $(tablestat).find('[id*="_sv_"]')[i].val(calcStat(bs, iv, ev, lvl, ns, isHP));
+        console.log(('iv ' + iv + ' bs ' + bs + ' ev ' + ev + ' lvl ' + lvl + 'isHP: '+ isHP));
+    }*/
+    
+    var i = 0;
+    $(tablestat).find('[id*="_sv_"]').each(function(){
+        var bs = parseInt(bs6[i]);
+        var iv = parseInt(iv6[i]);
+        var ev = parseInt(ev6[i]);
+        var ns = 1;//tablestat.find('[id$="_ns"]');
+        $(this).val(calcStat(bs, iv, ev, lvl, ns, i==5));
+        i++;
+    });
+    
+    updateRadar($(tablestat).parent().find('[id$="-Radar"]'), fillStats(tablestat.find('[id*="_sv_"]')));
+    
+}
+
+function fillStats(inputArray){
+    var tab = [];
+    
+    inputArray.each(function(){
+        tab.push(parseInt($(this).val()));
+    })
+    return tab;
 }
 
 
 
+function calcStat(bs, iv, ev, lvl, ns, isHP){
+    //alert('iv ' + iv + ' bs ' + bs + ' ev ' + ev + ' lvl ' + lvl);
+    
+    if(isHP)
+        return Math.floor((iv+(2*bs)+Math.floor(ev/4))*(lvl/100)+10 +lvl);
+    else
+        return Math.floor(Math.floor((iv+(2*bs)+Math.floor(ev/4))*(lvl/100)+5) * ns);
+}
+
+function updateRadar(radar, stats){
+    
+    for (var i = 0; i < stats.length; i++){
+        $(radar).datasets[0].points[i].value = stats;
+    }
+}
 
 
 
-
-
-
-
-
-
-
-
-
-
+//*****************************************
 
 function drawMoveTable(movetable, moves) {
 
@@ -257,7 +363,6 @@ function drawMoveTable(movetable, moves) {
     }
 
     function drawMoveRow(movetable, move) {
-        console.log(movetable.attr('id'));
         var row = $('<tr class="move_row"/>');
         movetable.append(row);
         
@@ -281,7 +386,7 @@ function drawMoveTable(movetable, moves) {
     }
 
 
-    /* Returns the type of a move and appends it to the table */
+    /* Gets the specs of a move and appends it to the table */
     function getMoveSpecs(sUrl, move_type, move_pp, move_power, move_effect, move_row) {
         $.ajax({
             url: secureAPI(sUrl), 

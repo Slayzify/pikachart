@@ -278,12 +278,22 @@ search_pokemon{
 }
 
 [id^=pokeID]{
+    /*display: table-cell;*/
     font-weight: bold;
     font-size: 16px;
     font-size: 4vw;
     color: #505050;
     text-shadow: 2px 2px #ffffff;
     text-align: center;
+}
+
+[id^=pokeID] img{
+    float:left;
+}
+
+[id^=pokeID] p{
+    float:left;
+    margin-left: 15px;
 }
 
 [id^="pokeID"][id$="-mega"]{
