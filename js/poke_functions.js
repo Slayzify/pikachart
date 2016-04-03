@@ -181,16 +181,18 @@ function loadCprPokemon(iptPoke){
 
 function selectPoke(poke){
     var custom_stats = editableZone(poke);
+    var loadinggif = $("<img id='loading' class='hm' alt='Loading... PLease wait' src='images/Loading.gif'/>");
+    custom_stats.prepend(loadinggif);
     $.ajax({
             url: 'https://pokeapi.co/api/v2/pokemon/' + $(poke).attr('id').split('_')[0] + '/', 
             method: 'GET',
             dataType: 'json',
-            success: function(result){
+            success: function(pokemon){
                 var stats = [];
-                for (var i=0; i < result.stats.length; i++) {
-                    stats.push(result.stats[i].base_stat);
+                for (var i=0; i < pokemon.stats.length; i++) {
+                    stats.push(pokemon.stats[i].base_stat);
                 }
-                drawChart(result.stats, setStats(custom_stats, stats, result.name));
+                drawChart(result.stats, setPokeData(custom_stats, stats, pokemon, pokemon.name, ));
             }
     });
 }
@@ -199,21 +201,26 @@ function editableZone(poke){
     return $(poke).parent().parent().find('.stats_generator');
 }
 
+/*function getSide(poke){
+    return $(poke).parent().parent().find('.stats_generator').attr('id').replace('custom_stats_','');
+}*/
+
 function getSide(poke){
     return editableZone(poke).attr('id').replace('pokemon_content','');
 }
 
-function setStats(container, statsval, pokemon){
+function setPokeData(container, statsval, pokemon, name){
     container.empty();
+    container.append($("<p id='pokeID-"+ name +"' class='hm'>" + toTitleCase(name) + "</p>"));
     var stats = ["spd","spdef","spatk","def","atk","hp"];
     var statsnames = ["Spd","Sp.Def","Sp.Atk","Def","Atk","HP"];
     var singlestat = "<div id='poke_stats_%Name' class='stat_container'><span id='stat_name_%Name'>%StatName :</span> <input id='stat_value_%Name' class='stat_value' type='text' value='%Stat_val' readonly='readonly'/></div>";
     var modifier = "";
-    var radar = $("<canvas id='" + pokemon + "-" + $(container).attr('id').replace("custom_stats_","") + "-Radar' height=" + calcHeight($(window).height()) + "  width=" + calcWidth(container.width()) + "></canvas>");
+    var radar = $("<canvas id='" + name + "-" + $(container).attr('id').replace("custom_stats_","") + "-Radar' height=" + calcHeight($(window).height()) + "  width=" + calcWidth(container.width()) + "></canvas>");
     container.append(radar);
     for (var i = 0; i < stats.length; i++){
         var children = $(singlestat.replace('%Name',stats[i]).replace("%StatName",statsnames[i]).replace("%Stat_val",statsval[i]));
-        console.log("pokemon: "+ singlestat.replace('%Name',stats[i]).replace("%StatName",statsnames[i]).replace("%Stat_val",statsval[i]));
+        //children.append(modifier);
         container.append(children);
     }
     return radar;
