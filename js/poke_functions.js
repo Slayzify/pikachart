@@ -124,6 +124,7 @@ function getData() {
 
         if ($.isNumeric(pokeId) == false) {
             $('#pokePage').empty();
+            $("#overlay").hide();
             $('#pokePage').load('404.html');
             return false;
         }
