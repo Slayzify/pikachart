@@ -164,7 +164,7 @@ function loadCprPokemon(iptPoke){
 
 function selectPoke(poke){
     var custom_stats = editableZone(poke);
-    var loadinggif = $("<img id='loading' class='hm' alt='Loading... PLease wait' src='images/Loading.gif'/>");
+    var loadinggif = $("<img id='loading' class='hm' alt='Loading... PLease wait' src='images/loading.gif'/>");
     custom_stats.empty();
     custom_stats.prepend(loadinggif);
     $.ajax({
