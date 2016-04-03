@@ -192,7 +192,7 @@ function selectPoke(poke){
                 for (var i=0; i < pokemon.stats.length; i++) {
                     stats.push(pokemon.stats[i].base_stat);
                 }
-                drawChart(result.stats, setPokeData(custom_stats, stats, pokemon, pokemon.name, ));
+                drawChart(pokemon.stats, setPokeData(custom_stats, stats, pokemon, pokemon.name));
             }
     });
 }
@@ -209,13 +209,19 @@ function getSide(poke){
     return editableZone(poke).attr('id').replace('pokemon_content','');
 }
 
+function getContainerSide(container){
+    return $(container).attr('id').split('_')[$(container).attr('id').split('_').length - 1];
+}
+
+
 function setPokeData(container, statsval, pokemon, name){
     container.empty();
     container.append($("<p id='pokeID-"+ name +"' class='hm'>" + toTitleCase(name) + "</p>"));
     var stats = ["spd","spdef","spatk","def","atk","hp"];
     var statsnames = ["Spd","Sp.Def","Sp.Atk","Def","Atk","HP"];
     var singlestat = "<div id='poke_stats_%Name' class='stat_container'><span id='stat_name_%Name'>%StatName :</span> <input id='stat_value_%Name' class='stat_value' type='text' value='%Stat_val' readonly='readonly'/></div>";
-    var modifier = "";
+    var modifier = ""; //a compléter pour ajouter le calculateur de stats
+    var movetable = "<div id='pokemoves_%Side'><table id='moves_%Side'><tr><th class'move_header'>Name</th><th class'move_header'>Type</th><th class'move_header'>PP</th><th class'move_header'>Power</th><th class'move_header'>Effect</th><th class'move_header'>Level</th><th class'move_header'>Method</th></tr></table></div>";
     var radar = $("<canvas id='" + name + "-" + $(container).attr('id').replace("custom_stats_","") + "-Radar' height=" + calcHeight($(window).height()) + "  width=" + calcWidth(container.width()) + "></canvas>");
     container.append(radar);
     for (var i = 0; i < stats.length; i++){
@@ -223,6 +229,10 @@ function setPokeData(container, statsval, pokemon, name){
         //children.append(modifier);
         container.append(children);
     }
+    container.append($("<br/>"))
+    var moves = $(movetable.replace("%Side", getContainerSide(container)).replace("%Side", getContainerSide(container)));
+    container.append(moves);
+    drawMoveTable(moves.find("#moves_" + getContainerSide(container)), pokemon.moves);
     return radar;
 }
 
@@ -230,3 +240,81 @@ function updateStat(origin){
     $(this)
     
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function drawMoveTable(movetable, moves) {
+
+        for (var i=0; i < moves.length; i++) {
+            //faire un tri des données à récupérer
+            for (var j=0; j < moves[i].version_group_details.length; j++) {
+
+                if (moves[i].version_group_details[j].version_group.name == 'omega-ruby-alpha-sapphire') {
+
+                    drawMoveRow(movetable, {
+                        move: moves[i].move,
+                        details: moves[i].version_group_details[j]
+                    });
+                }
+            }
+        }
+    }
+
+    function drawMoveRow(movetable, move) {
+        console.log(movetable.attr('id'));
+        var row = $('<tr class="move_row"/>');
+        movetable.append(row);
+        
+        var move_name = $('<td class="move_name move_cell">' + toTitleCase(move.move.name) + '</td>');
+        var move_PP = $('<td class="move_PP move_cell"/>');
+        var move_power = $('<td class="move_power move_cell"/>');
+        var move_type = $("<td class='move_type move_cell'/>");
+        var move_effect = $("<td class='move_effect move_cell'/>");
+        
+        var move_level = $("<td class='move_level move_cell'>" + move.details.level_learned_at + "</td>");
+        var move_method = $("<td class='move_method move_cell'><img alt='" + move.details.move_learn_method.name +"' title='" + toTitleCase(move.details.move_learn_method.name) + "' src='./images/moves/" + move.details.move_learn_method.name + ".png'/></td>");
+        
+        row.append(move_name);
+        row.append(move_type);
+        row.append(move_PP);
+        row.append(move_power);
+        row.append(move_effect);
+        row.append(move_level);
+        row.append(move_method);
+        getMoveSpecs(move.move.url, move_type, move_PP, move_power, move_effect, row);
+    }
+
+
+    /* Returns the type of a move and appends it to the table */
+    function getMoveSpecs(sUrl, move_type, move_pp, move_power, move_effect, move_row) {
+        $.ajax({
+            url: secureAPI(sUrl), 
+            method: 'GET',
+            dataType: 'json',            
+            success: function(result) {
+                move_type.html($("<img src='./images/types/" + toTitleCase(result.type.name) + ".gif'/>"));
+                move_pp.html(result.pp);
+                move_power.html(result.power);
+                var sMove = result.effect_entries[0].short_effect;
+                sMove = sMove.replace("$effect_chance%", "");
+                move_effect.html(sMove);
+                move_row.attr('title', result.effect_entries[0].effect);
+            }
+        });
+    }
+    
+    
