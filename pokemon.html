@@ -22,6 +22,7 @@
     <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <body>
+<div id="overlay"></div>
     <div id='pokeimport_header'></div>
     <div id='body2'><!-- This is the body of the page-->
         <div id='pokePage'>
@@ -72,7 +73,9 @@
 
 <script>
     $(document).ready(function() {
+        $("#overlay").show();
         $('#dvloader').show();
+
         getData();
     });
 

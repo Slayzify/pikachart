@@ -61,6 +61,7 @@ function getEvolutionChain(sUrl, pokeId) {
                         }
 
                         $('#dvloader').hide();
+                        $('#overlay').hide();
                     }
                 });
             }
