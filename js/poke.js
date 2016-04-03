@@ -6,6 +6,8 @@ function getEvolutionChain(sUrl, pokeId) {
             dataType: 'json',            
             success: function(result) {
                 
+                getExtendedInfo(result);
+
                 $.ajax({
                     url: secureAPI(result.evolution_chain.url), 
                     method: 'GET',
@@ -57,6 +59,8 @@ function getEvolutionChain(sUrl, pokeId) {
                                 }
                             }                            
                         }
+
+                        $('#dvloader').hide();
                     }
                 });
             }
@@ -64,7 +68,7 @@ function getEvolutionChain(sUrl, pokeId) {
     }
     
     function drawEvolutionChain(conditionsArray, pokename) {
-        console.log(conditionsArray);
+        
         var finalString = '';
 
         try{
@@ -152,7 +156,18 @@ function getEvolutionChain(sUrl, pokeId) {
         return finalArray.concat(tmpArray);
     }
 
-    function drawBarChart() {
+    function drawBarChart(arrayStats) {
+
+        //var dataArray = [];
+        var labelArray = ["Spd","Sp.Def","Sp.Atk","Def","Atk","HP"];
+        var dataProvider = [];
+
+        for (var i=0; i < arrayStats.length; i++) {
+            var obj = new Object();
+            obj.stat = labelArray[i];
+            obj.value = arrayStats[i].base_stat;            
+            dataProvider.push(obj);
+        }        
 
          var chart = AmCharts.makeChart("barChart", {
             "type": "serial",
@@ -165,15 +180,7 @@ function getEvolutionChain(sUrl, pokeId) {
                 "valueWidth":0,
                 "verticalGap":0
             },
-            "dataProvider": [{
-                "stat": "HP",
-                "value": 50,
-                "expenses": 23.1
-            }, {
-                "stat": "ATK",
-                "value": 35,
-                "expenses": 22
-            }],
+            "dataProvider": dataProvider,
             "valueAxes": [{
                 "minorGridAlpha": 0.08,
                 "minorGridEnabled": true,
@@ -218,8 +225,7 @@ function getEvolutionChain(sUrl, pokeId) {
         var labelArray = ["Spd","Sp.Def","Sp.Atk","Def","Atk","HP"];
 
         for (var i=0; i < arrayStats.length; i++) {
-            dataArray.push(arrayStats[i].base_stat);
-            //labelArray.push(toTitleCase(arrayStats[i].stat.name));
+            dataArray.push(arrayStats[i].base_stat);            
         }
 
         var data = {
@@ -332,3 +338,48 @@ function getEvolutionChain(sUrl, pokeId) {
             }
         });
     }
+
+
+    function getGeneralInfo(objInfo) {
+
+        $('#height').append('Height : ' + objInfo.height/10 + ' m');
+        $('#weight').append('Weight : ' + objInfo.weight/10 + ' kg');
+        
+        for (var i=0; i < objInfo.types.length; i++) {
+            if (i > 0)
+                $('#type').append(toTitleCase(objInfo.types[i].type.name));
+            else
+                $('#type').append('Types : ' + toTitleCase(objInfo.types[i].type.name + ' / '));
+        }
+    }
+
+
+    function getExtendedInfo(objExt) {
+        console.log(objExt)
+
+        var genderM = 8;
+        var xp = [];
+
+        xp[0] = {name:'slow', value:1250000};
+        xp[1] = {name:'medium', value:1000000};
+        xp[2] = {name:'fast', value:800000};
+        xp[3] = {name:'medium-slow', value:1059860};
+        xp[4] = {name:'slow-then-very-fast', value:600000};
+        xp[5] = {name:'fast-then-very-slow', value:1640000};
+        
+        for (var i=0; i < xp.length; i++) {            
+            if (xp[i].name == objExt.growth_rate.name) {
+                $('#xpclass').append('XP to lvl 100 : ' + xp[i].value);
+                break;
+            }
+        }
+
+        for (var i=0; i < objExt.flavor_text_entries.length; i++) {            
+            if (objExt.flavor_text_entries[i].language.name == 'en' && objExt.flavor_text_entries[i].version.name == 'alpha-sapphire')
+                $('#desc').append(objExt.flavor_text_entries[i].flavor_text);
+        }
+
+        $('#gender-ratio').append('Gender Ratio : M ' + (genderM - objExt.gender_rate) + '/8 ' + 'F ' + objExt.gender_rate + '/8');        
+        $('#catch-rate').append('Catch Rate : ' + objExt.capture_rate + '/255');
+    }
+

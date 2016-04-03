@@ -118,23 +118,6 @@ function calcWidth(width){
 }
 
 
-/**** Pokemon ****/
-function getStat() {
-    var pokeid = $('#pokeid').val();
-    $("#pokename").val('');
-    $.ajax({
-        url: 'http://pokeapi.co/api/v1/pokemon/' + pokeid + '/', 
-        method: 'GET',
-        success: function(result) {
-            $('#infoblock').empty();
-            $('#infoblock').append(result.name + '</br>');
-            $('#infoblock').append('Attack : ' + result.attack + '</br>');
-            $('#infoblock').append('Defense : ' + result.defense + '</br>');
-            $('#infoblock').append('Speed : ' + result.speed + '</br>');
-        }
-    });
-}
-
 function getData() {
 
         var pokeId = getUrlParameter('id');
@@ -154,13 +137,12 @@ function getData() {
                                 
                 fillNameDiv(toTitleCase(result.name));
                 addPic(result.sprites.front_default);
+                getGeneralInfo(result);
                 getEvolutionChain(result.species.url, pokeId);
 
                 drawChart(result.stats);
-                drawBarChart();
+                drawBarChart(result.stats);
                 drawTable(result.moves);                
-
-                $('#dvloader').hide();
             }
         });
     }
