@@ -2,6 +2,8 @@
 
 body{
     font-family:sans-serif;
+    padding:0px;
+    margin:0;
 }
 
 #overlay {
@@ -24,6 +26,7 @@ body{
     border-bottom: thick;
     border-bottom-color: black;
     border-bottom-style: solid;
+    overflow: auto;
 }
 
 #header-left{
@@ -36,6 +39,11 @@ body{
 #header-top-right, #header-bottom-right{
 
 }
+
+#header-top-right{
+    margin-top: calc(5vw + 2.5%);
+}
+
 
 #header-bottom-right{
     align-content: center;
@@ -98,6 +106,7 @@ body {
     font-weight:bold;
     font-family:sans-serif;
     text-align:center;
+    font-size: 1.7vw;
     background:rgba(100,100,100,0.7);
     width:20%;
     max-width: 250px;
@@ -111,10 +120,6 @@ body {
     display:inline-block;
     width:100%;
     margin:auto;
-}
-
-#header-top-right{
-    margin-top:4em;
 }
 
 #menu-index{
