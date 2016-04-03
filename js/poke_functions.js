@@ -214,7 +214,13 @@ function setPokeData(container, statsval, pokemon, name){
         var children = $(singlestat.replace(/%Name/g,stats[i]).replace(/%StatName/g,statsnames[i]).replace(/%Stat_val/g,statsval[i]).replace(/%Pokemon/g,name + "_" + getContainerSide(container)).replace(/%Stat_calc/g,calcStat(parseInt(statsval[i]),0,0,1,1,(i < (stats.lengh-1)))));
         statstable.append(children);
     }
-    var ns = $(("<tr id='%Pokemon_poke_stats_ns_c'><th>Nature :</th><td><select id='%Pokemon_ns'/></td></tr>").replace(/%Pokemon/g,name + "_" + getContainerSide(container)));
+    var ns = $(("<tr id='%Pokemon_poke_stats_ns_c'><th>Nature :</th><td><select id='%Pokemon_ns' class='nature_value'/></td></tr>").replace(/%Pokemon/g,name + "_" + getContainerSide(container)));
+    var select_ns = ns.find("select");
+    
+    for (var i = 0; i < natures.length; i++){
+        select_ns.append($("<option value='" + natures[i].name + "'" + (natures[i].name == "Docile" ? " selected='selected' ": "") + ">" + natures[i].name + "</option>"));
+    }
+    
     statstable.append(ns);
     var lvl = $(("<tr id='%Pokemon_poke_stats_lvl_c'><th>Level :</th><td><input id='%Pokemon_lvl' class='stat_value' type='text' value='1' /></td></tr>").replace(/%Pokemon/g,name + "_" + getContainerSide(container)));
     statstable.append(lvl);
@@ -264,15 +270,29 @@ function setPokeData(container, statsval, pokemon, name){
             }
         }
         else{
-            if($(this).val().trim() == "")
-                $(this).val('0');
+            if($(this).attr('id').indexOf("_iv_") > -1){
+                if($(this).val().trim() == "")
+                    $(this).val('0');
+                else{
+                    if(parseInt($(this).val()) > 31)
+                        $(this).val('31');
+                }
+            }
             else{
-                if(parseInt($(this).val()) > 252)
-                    $(this).val('252');
+                if($(this).val().trim() == "")
+                    $(this).val('0');
+                else{
+                    if(parseInt($(this).val()) > 252)
+                        $(this).val('252');
+                }
             }
         }
         processStats($(this));
     });
+    
+    $('.nature_value').change(function(){
+        processStats($(this));
+    })
     
     return radar;
 }
@@ -290,7 +310,7 @@ function processStats(IEV){
     
     var isHP = $(IEV).attr('id').indexOf("_hp") > -1;
     var lvl = parseInt(tablestat.find('[id$="_lvl"]').val());
-    var ns = 1;//tablestat.find('[id$="_ns"]');
+    var ns = getNatStats(tablestat.find('[id$="_ns"]').val());
     
     
     /*for (var i = 0; i<6;i++){
@@ -307,8 +327,8 @@ function processStats(IEV){
         var bs = parseInt(bs6[i]);
         var iv = parseInt(iv6[i]);
         var ev = parseInt(ev6[i]);
-        var ns = 1;//tablestat.find('[id$="_ns"]');
-        $(this).val(calcStat(bs, iv, ev, lvl, ns, i==5));
+        $(this).val(calcStat(bs, iv, ev, lvl, ns[i], i==5));
+        //console.log((i + ':                iv ' + iv + ' bs ' + bs + ' ev ' + ev + ' lvl ' + lvl+ ' ns ' + ns[i] + ' isHP: '+ isHP));
         i++;
     });
     
@@ -326,6 +346,14 @@ function fillStats(inputArray){
 }
 
 
+function getNatStats(nature){
+    for(var i=0; i< natures.length; i++){
+        if(natures[i].name == nature){
+            console.log(i);
+            return natures[i].stats;
+        }
+    }
+}
 
 function calcStat(bs, iv, ev, lvl, ns, isHP){
     //alert('iv ' + iv + ' bs ' + bs + ' ev ' + ev + ' lvl ' + lvl);

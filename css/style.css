@@ -58,7 +58,9 @@ body{
 
 #punchline{
     font-family:sans-serif;
-    font-size:1.8em;
+    /*font-size:1.8em;*/
+    font-size: 14px;
+    font-size: 3vw;
     font-weight: bold;
     color: #AAAAAA;
     font-style:oblique;
