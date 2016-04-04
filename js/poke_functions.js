@@ -23,21 +23,6 @@ function loadSelectionPanel(panel, expr){
 };
 
 
-function displayPopup() {
-    $('#btnAbout').magnificPopup({
-       items: {
-            src: '<div id="test-modal" class="white-popup">' +
-                    '<h1>About PikaChart :</h1>' +
-                    '<p>Test Some text.</p>' +
-                    '<p><a class="popup-modal-dismiss">Dismiss</a></p>' +
-                 '</div>',
-            type:'inline'
-        },
-        modal: false
-    });
-}
-
-
 function secureAPI(sUrl) {
         if (sUrl.indexOf('https') == -1)
             return sUrl.replace('http','https');

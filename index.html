@@ -19,14 +19,12 @@
     <script src="js/poke_load.js"></script>
     <script src="js/jquery.magnific-popup.js"></script>
     <script>
-    $(function(){
-        $('[id^="pokeimport_"]').each(function(){
-            $(this).load($(this).attr('id').replace('pokeimport_','') + '.html');
+        $(function(){
+            $('[id^="pokeimport_"]').each(function(){
+                $(this).load($(this).attr('id').replace('pokeimport_','') + '.html');
+            });
         });
-    });
     </script>
-    <style>
-    </style>
 </head>
 <body>
     <div id='pokeimport_header'></div>
@@ -40,3 +38,9 @@
 </div>
 </body>
 </html>
+
+<script>
+    function selectMenu() {
+        $('#index').addClass('active');
+    }
+</script>

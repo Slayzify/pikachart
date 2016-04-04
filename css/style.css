@@ -1,4 +1,4 @@
-@import url(http://fonts.googleapis.com/css?family=Covered+By+Your+Grace);
+
 
 body{
     background-color : black;
@@ -7,10 +7,12 @@ body{
     font-family:sans-serif;
     padding:0px;
     margin:0;
+    font-family: helvetica;
 }
 
-#header {
-    
+
+a {
+    text-decoration: none;
 }
 
 .white-popup {
@@ -18,16 +20,10 @@ body{
   background: #FFF;
   padding: 25px;
   width:auto;
-  max-width: 400px;
+  max-width: 60%;
   margin: 0 auto; 
 }
 
-
-/* 
-
-====== Zoom effect ======
-
-*/
 .mfp-zoom-in {
   
   /* start state */
@@ -71,7 +67,7 @@ body{
 
 #overlay {
     background-color: rgba(0, 0, 0, 0.8);
-    z-index: 999;
+    z-index: 1;
     position: fixed;
     left: 0;
     top: 0;
@@ -89,7 +85,7 @@ ul {
     position: fixed;
     top: 0;
     width: 100%;
-    z-index:1;
+    z-index:10;
 }
 
 li {
@@ -109,18 +105,19 @@ li a:hover:not(.active) {
 }
 
 .active {
-    background-color: #4CAF50;
+    background-color: #E41B17;
 }
 
 
-#punchline{
-    font-family:sans-serif;
-    /*font-size:1.8em;*/
+#punchline{    
     font-size: 14px;
     font-size: 3vw;
     font-weight: bold;
-    color: #AAAAAA;
+    color: #FFF;
     font-style:oblique;
+    padding-top:5%;
+    text-align: center;
+    background-color: rgba(228,27,23,0.8);
 }
 
 #body2{
@@ -134,6 +131,7 @@ li a:hover:not(.active) {
 }
 
 #pokemontable{
+    padding-top: 3%;
     max-width: 800px;
     margin:auto;
     align-content: center;    
@@ -255,9 +253,9 @@ li a:hover:not(.active) {
     color: whitesmoke;
 }
 
-#pokemoves{
+[id^=pokemoves]{
     overflow-x:auto;
-    margin-left:25%;
+    margin-left:25%;    
 }
 
 #myChart{
@@ -355,6 +353,7 @@ search_pokemon{
 [id$=barChart]{
     width:100%;
     height : 25%;
+    min-height: 250px;
 }
 
 [id$=_statstable] tbody{

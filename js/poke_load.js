@@ -88,4 +88,4 @@ $(function() {
             $('#pokeid').val(ui.item.value);
         });
         */   
-    });
+});

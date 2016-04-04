@@ -32,23 +32,23 @@
             <div style='display:none' id='dvloader'><img src='images/loading.gif'/></div>
             <div class='pokecomparator'>
                 <div id='pokemon_content_center' class='pokemon_content'>
-                    <div id='pokeimport_poke_stats' width='100%'></div>
-                    <div id='pokeimport_moves'></div>
+                    <div id='pokeimport_poke_stats' width='100%'></div>                    
                 </div>
-            </div>
+                <div id='pokeimport_safari'></div>
+            </div>            
         </div>
     </div>
 </body>
 </html>
 
 <script>
-    $(document).ready(function() {
+    $(document).ready(function() {        
         $("#overlay").show();
         $('#dvloader').show();
-
         getData();
     });
 
-
-    
+    function selectMenu() {
+        $('#pokemon').addClass('active');
+    }
 </script>

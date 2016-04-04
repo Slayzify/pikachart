@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="css/jquery-ui.css">
     <link rel="stylesheet" href="css/jquery.dataTables.css">
     <link rel="stylesheet" href="css/magnific-popup.css">
-    <link rel="stylesheet" type="text/css" href="css/style.css"> 
+    <link rel="stylesheet" type="text/css" href="css/style.css">    
     <script src="js/jquery-1.10.2.js"></script>
     <script src="js/jquery-ui.js"></script>
     <script src="js/jquery.dataTables.js"></script>
@@ -20,9 +20,6 @@
     <script src="js/poke_functions.js"></script>
     <script src="js/poke_load.js"></script>
     <script src="js/jquery.magnific-popup.js"></script>
-    <script>
-    </script>
-    <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <body>
     <div id='pokeimport_header'></div>
@@ -34,8 +31,7 @@
                     <div id='comparison_poke_selection_left' class='poke_selection'>
                     </div>
                     <div id='pokemon_content_left' class='pokemon_content'>
-                        <div id='pokeimport_poke_stats' width='100%'></div>
-                        <div id='pokeimport_moves'></div>
+                        <div id='pokeimport_poke_stats' width='100%'></div>                        
                     </div>
                 </div>
                 <div class='pokecomparator'>
@@ -43,11 +39,16 @@
                     <div id='comparison_poke_selection_right' class='poke_selection'>
                     </div>
                     <div id='pokemon_content_right' class='pokemon_content'>
-                        <div id='pokeimport_poke_stats' width='100%'></div>
-                        <div id='pokeimport_moves'></div>
+                        <div id='pokeimport_poke_stats' width='100%'></div>                        
                     </div>
                 </div>
             </div>
         </div>
 </body>
 </html>
+
+<script>
+    function selectMenu() {
+        $('#comparison').addClass('active');
+    }
+</script>
