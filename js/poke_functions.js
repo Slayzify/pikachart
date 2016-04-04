@@ -24,8 +24,17 @@ function loadSelectionPanel(panel, expr){
 
 
 function displayPopup() {
-
-    alert('test');
+    $('#btnAbout').magnificPopup({
+       items: {
+            src: '<div id="test-modal" class="white-popup">' +
+                    '<h1>About PikaChart :</h1>' +
+                    '<p>Test Some text.</p>' +
+                    '<p><a class="popup-modal-dismiss">Dismiss</a></p>' +
+                 '</div>',
+            type:'inline'
+        },
+        modal: false
+    });
 }
 
 
