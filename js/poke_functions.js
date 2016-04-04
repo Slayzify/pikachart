@@ -22,6 +22,13 @@ function loadSelectionPanel(panel, expr){
         }
 };
 
+
+function displayPopup() {
+
+    alert('test');
+}
+
+
 function secureAPI(sUrl) {
         if (sUrl.indexOf('https') == -1)
             return sUrl.replace('http','https');
@@ -93,8 +100,9 @@ function drawChart(arrayStats, chart_container) {
         ]
     };
 
-    var ctx = $(chart_container).get(0).getContext("2d");        
-    var myRadarChart = new Chart(ctx).Radar(data);
+    var ctx = $(chart_container).get(0).getContext("2d");
+    var myRadarChart = new Chart(ctx).Radar(data);    
+    $(chart_container).data('test', myRadarChart);
 }
 
 function calcHeight(height){
@@ -312,16 +320,6 @@ function processStats(IEV){
     var lvl = parseInt(tablestat.find('[id$="_lvl"]').val());
     var ns = getNatStats(tablestat.find('[id$="_ns"]').val());
     
-    
-    /*for (var i = 0; i<6;i++){
-        var bs = parseInt(bs6[i]);
-        var iv = parseInt(iv6[i]);
-        var ev = parseInt(ev6[i]);
-        var ns = 1;//tablestat.find('[id$="_ns"]');
-        var vs = $(tablestat).find('[id*="_sv_"]')[i].val(calcStat(bs, iv, ev, lvl, ns, isHP));
-        console.log(('iv ' + iv + ' bs ' + bs + ' ev ' + ev + ' lvl ' + lvl + 'isHP: '+ isHP));
-    }*/
-    
     var i = 0;
     $(tablestat).find('[id*="_sv_"]').each(function(){
         var bs = parseInt(bs6[i]);
@@ -349,7 +347,7 @@ function fillStats(inputArray){
 function getNatStats(nature){
     for(var i=0; i< natures.length; i++){
         if(natures[i].name == nature){
-            console.log(i);
+            //console.log(i);
             return natures[i].stats;
         }
     }
@@ -364,11 +362,12 @@ function calcStat(bs, iv, ev, lvl, ns, isHP){
         return Math.floor(Math.floor((iv+(2*bs)+Math.floor(ev/4))*(lvl/100)+5) * ns);
 }
 
-function updateRadar(radar, stats){
-    
-    for (var i = 0; i < stats.length; i++){
-        $(radar).datasets[0].points[i].value = stats;
+function updateRadar(radar, stats){    
+    var chartPoints = $(radar).data('test');    
+    for (var i = 0; i < stats.length; i++){        
+        chartPoints.datasets[0].points[i].value = stats[i];
     }
+    chartPoints.update();
 }
 
 

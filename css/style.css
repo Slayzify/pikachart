@@ -1,9 +1,16 @@
 @import url(http://fonts.googleapis.com/css?family=Covered+By+Your+Grace);
 
 body{
+    background-color : black;
+    background-image : url("../images/background-pokeball.png");
+    background-attachment: fixed;
     font-family:sans-serif;
     padding:0px;
     margin:0;
+}
+
+#header {
+    
 }
 
 #overlay {
@@ -17,52 +24,38 @@ body{
     display: none;
 }
 
-#header{
-    /*background-image:url("../images/background-header.png");*/
-    background:rgba(200,70,70,0.95);
-    width:100%;
-    max-height:15%;
-    height:150px;
-    border-bottom: thick;
-    border-bottom-color: black;
-    border-bottom-style: solid;
-    overflow: auto;
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index:1;
 }
 
-#header-left{
-    width:30%;
-    float:left;
-    height:auto;
-    vertical-align:bottom;
+li {
+    float: left;
 }
 
-#header-top-right, #header-bottom-right{
-
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
 }
 
-#header-top-right{
-    margin-top: calc(5vw + 2.5%);
+li a:hover:not(.active) {
+    background-color: #111;
 }
 
-
-#header-bottom-right{
-    align-content: center;
-}
-#header-right{
-    vertical-align: bottom;
-    width:70%;
-    float:right;
+.active {
+    background-color: #4CAF50;
 }
 
-
-#charizard_header_top{
-    width:100%;
-}
-
-#charizard_header_bottom{
-    width:35%;
-    display:inline-block;
-}
 
 #punchline{
     font-family:sans-serif;
@@ -72,12 +65,6 @@ body{
     font-weight: bold;
     color: #AAAAAA;
     font-style:oblique;
-}
-
-body {
-    background-color : black;
-    background-image : url("../images/background-pokeball.png");
-    background-attachment: fixed;
 }
 
 #body2{
@@ -93,7 +80,7 @@ body {
 #pokemontable{
     max-width: 800px;
     margin:auto;
-    align-content: center;
+    align-content: center;    
     /*background:rgba(155,0,0,0.2);*/
 }
 

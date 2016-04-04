@@ -246,7 +246,7 @@ function getEvolutionChain(sUrl, pokeId) {
         };
 
         var ctx = $("#myChart").get(0).getContext("2d");        
-        var myRadarChart = new Chart(ctx).Radar(data);
+        var myRadarChart = new Chart(ctx).Radar(data);        
     }
 
     function fillNameDiv(sName) {
@@ -356,7 +356,7 @@ function getEvolutionChain(sUrl, pokeId) {
 
 
     function getExtendedInfo(objExt) {
-        console.log(objExt)
+        //console.log(objExt)
 
         var genderM = 8;
         var xp = [];
