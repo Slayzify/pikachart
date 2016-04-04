@@ -93,6 +93,7 @@ li {
 }
 
 li a {
+    font-size: 1.9vh;
     display: block;
     color: white;
     text-align: center;
@@ -115,7 +116,7 @@ li a:hover:not(.active) {
     font-weight: bold;
     color: #FFF;
     font-style:oblique;
-    padding-top:5%;
+    padding-top:6%;
     text-align: center;
     background-color: rgba(228,27,23,0.8);
 }
@@ -381,6 +382,7 @@ search_pokemon{
 [id^=pokemoves].hm2{
     display: block;    
     margin-right: auto;
+    margin-left: auto;
 }
 
 [id$=_statstable].hm2{
@@ -389,7 +391,7 @@ search_pokemon{
 }
 
 [id^=pokemoves].hm3{
-    display: block;    
+    display: block;
     margin-left: auto;
     margin-right: auto;
 }
