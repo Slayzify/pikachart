@@ -30,44 +30,11 @@
     <div id='body2'><!-- This is the body of the page-->
         <div id='pokePage'>
             <div style='display:none' id='dvloader'><img src='images/loading.gif'/></div>
-            <div id='name'></div>
-            <div id='pic'></div>
-            <div id='infoblock1'><b>Informations</b>
-                <div id="height"></div>
-                <div id="weight"></div>                
-            </div>
-            <div id='infoblock2'>
-                <div id="type"></div>                
-                <div id="catch-rate"></div> <!-- dans species -->
-                <div id="gender-ratio"></div> <!-- dans species -->
-                <div id="xpclass"></div> <!-- dans species -->
-                <div id="desc"></div> <!-- dans species (flavor_text_entries)-->
-            </div>
-
-            <div id='ability'></div>
-            <div id='evolutionChain'>
-                <table id='evolutionTable' style='width:100%'>
-                    <tr id='picRow'></tr>
-                    <tr id='textRow'></tr>
-                </table>
-            </div>
-            <div id='stats'></div>
-            <div id='spiderChart'>
-                <canvas id="myChart" height=350 width=350></canvas>
-            </div>
-            <div id="barChart"></div>            
-            <div id="pokemoves">
-                <table id='moves'>
-                    <tr>
-                        <th class'move_header'>Name</th>
-                        <th class'move_header'>Type</th>
-                        <th class'move_header'>PP</th>
-                        <th class'move_header'>Power</th>
-                        <th class'move_header'>Effect</th>
-                        <th class'move_header'>Level</th>
-                        <th class'move_header'>Method</th>
-                    </tr>
-                </table>
+            <div class='pokecomparator'>
+                <div id='pokemon_content_center' class='pokemon_content'>
+                    <div id='pokeimport_poke_stats' width='100%'></div>
+                    <div id='pokeimport_moves'></div>
+                </div>
             </div>
         </div>
     </div>

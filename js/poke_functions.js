@@ -143,15 +143,23 @@ function getData() {
             method: 'GET',
             dataType: 'json',
             success: function(result) {
-                                
-                fillNameDiv(toTitleCase(result.name));
-                addPic(result.sprites.front_default);
+                
+                var stats = [];
+                for (var i=0; i < result.stats.length; i++) {
+                    stats.push(result.stats[i].base_stat);
+                }
+                
+                drawChart(result.stats, setPokeData($(".stats_generator"), stats, result, result.name, true));
+                
+                
+                //fillNameDiv(toTitleCase(result.name));
+                //addPic(result.sprites.front_default);
                 getGeneralInfo(result);
                 getEvolutionChain(result.species.url, pokeId);
 
-                drawChart(result.stats);
-                drawBarChart(result.stats);
-                drawTable(result.moves);                
+                //drawChart(result.stats);
+                //drawBarChart(result.stats);
+                //drawTable(result.moves);             
             }
         });
     }
@@ -184,7 +192,7 @@ function selectPoke(poke){
                 for (var i=0; i < pokemon.stats.length; i++) {
                     stats.push(pokemon.stats[i].base_stat);
                 }
-                drawChart(pokemon.stats, setPokeData(custom_stats, stats, pokemon, pokemon.name));
+                drawChart(pokemon.stats, setPokeData(custom_stats, stats, pokemon, pokemon.name, false));
             }
     });
 }
@@ -206,18 +214,27 @@ function getContainerSide(container){
 }
 
 
-function setPokeData(container, statsval, pokemon, name){
+function setPokeData(container, statsval, pokemon, name, isPagePoke){
     container.empty();
     container.append($("<div id='pokeID-"+ name +"' class='hm'><p>" + toTitleCase(name) + "</p><br/><img src='http://pokeapi.co/media/sprites/pokemon/" + pokemon.id + ".png'/></div>"));
+    
+    if(isPagePoke){
+            var pagePoke = "<div id='name'></div><div id='pic'></div><div id='infoblock1'><div id='height'></div><div id='weight'></div></div><div id='infoblock2'><div id='type'></div><div id='catch-rate'></div> <!-- dans species --><div id='gender-ratio'></div> <!-- dans species --><div id='xpclass'></div> <!-- dans species --><div id='desc'></div> <!-- dans species (flavor_text_entries)--></div><div id='ability'></div><div id='evolutionChain'><table id='evolutionTable' style='width:100%'><tr id='picRow'></tr><tr id='textRow'></tr></table></div>"
+            container.append($(pagePoke))
+    }
     var stats = ["spd","spdef","spatk","def","atk","hp"];
     var statsnames = ["Spd","Sp.Def","Sp.Atk","Def","Atk","HP"];
-    var statstable = $("<table id='statstable'><tr><th>Stat</th><th title='Base Stat'>BS</th><th title='Individual Values'>IV</th><th title='Effort Values'>EV</th><th>Value</th></tr></table>")
+    var statstable = $("<table id='%Pokemon_statstable' class='hm'><tr><th>Stat</th><th title='Base Stat'>BS</th><th title='Individual Values'>IV</th><th title='Effort Values'>EV</th><th>Value</th></tr></table>".replace(/%Pokemon/g,name + "_" + getContainerSide(container)))
     //var singlestat = "<div id='poke_stats_%Name' class='stat_container'><span id='stat_name_%Name'>%StatName :</span> <input id='stat_value_%Name' class='stat_value' type='text' value='%Stat_val' readonly='readonly'/></div>";
     var singlestat = "<tr id='%Pokemon_poke_stats_%Name_c'><th>%StatName :</th><td><input id='%Pokemon_bs_%Name' class='stat_value' type='text' value='%Stat_val' readonly='readonly'/></td><td><input id='%Pokemon_iv_%Name' class='stat_value' type='text' value='0'/></td><td><input id='%Pokemon_ev_%Name' class='stat_value' type='text' value='0' /></td><td><input id='%Pokemon_sv_%Name' class='stat_value' type='text' value='%Stat_calc' readonly='readonly'/></td></tr>";
     var movetable = "<div id='pokemoves_%Side' class='hm'><table id='moves_%Side'><tr><th class'move_header'>Name</th><th class'move_header'>Type</th><th class'move_header'>PP</th><th class'move_header'>Power</th><th class'move_header'>Effect</th><th class'move_header'>Level</th><th class'move_header'>Method</th></tr></table></div>";
     var radar = $("<canvas id='" + name + "-" + $(container).attr('id').replace("custom_stats_","") + "-Radar' height=" + calcHeight($(window).height()) + "  width=" + calcWidth(container.width()) + "></canvas>");
-    container.append($("<br/>"))
+    container.append($("<br/>"));
+    var barchart = $(('<div id="%Pokemon_barChart"></div>').replace(/%Pokemon/g,name + "_" + getContainerSide(container)));
+    
     container.append(radar);
+    container.append(barchart);
+    drawBarChart(barchart, statsval);
     for (var i = 0; i < stats.length; i++){
         var children = $(singlestat.replace(/%Name/g,stats[i]).replace(/%StatName/g,statsnames[i]).replace(/%Stat_val/g,statsval[i]).replace(/%Pokemon/g,name + "_" + getContainerSide(container)).replace(/%Stat_calc/g,calcStat(parseInt(statsval[i]),0,0,1,1,(i < (stats.lengh-1)))));
         statstable.append(children);
@@ -248,26 +265,6 @@ function setPokeData(container, statsval, pokemon, name){
             return false;
          }
     });
-    /*$('.stat_value').focusout(function (e) {
-     //if the letter is not digit then display error and don't type anything
-        if($(this).attr('id').substr("_lvl") > -1){
-            if($(this).val().trim() == "" || parseInt($(this).val()) < 1)
-                $(this).val('1');
-            else{
-                if(parseInt($(this).val()) > 100)
-                    $(this).val('100');
-            }
-        }
-        else{
-            if($(this).val().trim() == "")
-                $(this).val('0');
-            else{
-                if(parseInt($(this).val()) > 252)
-                    $(this).val('252');
-            }
-        }   
-        
-    });*/
     $('.stat_value').keyup(function (e) {
         if($(this).attr('id').indexOf("_lvl") > -1){
             if($(this).val().trim() == "" || parseInt($(this).val()) < 1)
@@ -303,6 +300,57 @@ function setPokeData(container, statsval, pokemon, name){
     })
     
     return radar;
+}
+
+
+function drawBarChart(barchart, arrayStats) {
+
+    //var dataArray = [];
+    var labelArray = ["Spd","Sp.Def","Sp.Atk","Def","Atk","HP"];
+    var dataProvider = [];
+
+    for (var i=0; i < arrayStats.length; i++) {
+        var obj = new Object();
+        obj.stat = labelArray[i];
+        obj.value = arrayStats[i];            
+        dataProvider.push(obj);
+    }        
+
+     var chart = AmCharts.makeChart($(barchart).attr('id'), {
+        "type": "serial",
+        "theme": "light",  
+        "handDrawn":true,
+        "handDrawScatter":2,
+        "legend": {
+            "useGraphSettings": true,
+            "markerSize":12,
+            "valueWidth":0,
+            "verticalGap":0
+        },
+        "dataProvider": dataProvider,
+        "valueAxes": [{
+            "minorGridAlpha": 0.08,
+            "minorGridEnabled": true,
+            "position": "top",
+            "axisAlpha":0
+        }],
+        "startDuration": 1,
+        "graphs": [{
+            "balloonText": "<span style='font-size:13px;'>[[title]] in [[category]]:<b>[[value]]</b></span>",
+            "title": "Value",
+            "type": "column",
+            "fillAlphas": 0.8,
+            "valueField": "value"
+        }],
+        "rotate": true,
+        "categoryField": "stat",
+        "categoryAxis": {
+            "gridPosition": "start"
+        },
+        "export": {
+            "enabled": true
+         }
+    });
 }
 
 //*******************************************

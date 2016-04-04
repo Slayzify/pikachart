@@ -157,97 +157,6 @@ function getEvolutionChain(sUrl, pokeId) {
         return finalArray.concat(tmpArray);
     }
 
-    function drawBarChart(arrayStats) {
-
-        //var dataArray = [];
-        var labelArray = ["Spd","Sp.Def","Sp.Atk","Def","Atk","HP"];
-        var dataProvider = [];
-
-        for (var i=0; i < arrayStats.length; i++) {
-            var obj = new Object();
-            obj.stat = labelArray[i];
-            obj.value = arrayStats[i].base_stat;            
-            dataProvider.push(obj);
-        }        
-
-         var chart = AmCharts.makeChart("barChart", {
-            "type": "serial",
-            "theme": "light",  
-            "handDrawn":true,
-            "handDrawScatter":2,
-            "legend": {
-                "useGraphSettings": true,
-                "markerSize":12,
-                "valueWidth":0,
-                "verticalGap":0
-            },
-            "dataProvider": dataProvider,
-            "valueAxes": [{
-                "minorGridAlpha": 0.08,
-                "minorGridEnabled": true,
-                "position": "top",
-                "axisAlpha":0
-            }],
-            "startDuration": 1,
-            "graphs": [{
-                "balloonText": "<span style='font-size:13px;'>[[title]] in [[category]]:<b>[[value]]</b></span>",
-                "title": "Value",
-                "type": "column",
-                "fillAlphas": 0.8,
-                "valueField": "value"
-            }/*, {
-                "balloonText": "<span style='font-size:13px;'>[[title]] in [[category]]:<b>[[value]]</b></span>",
-                "bullet": "round",
-                "bulletBorderAlpha": 1,
-                "bulletColor": "#FFFFFF",
-                "useLineColorForBulletBorder": true,
-                "fillAlphas": 0,
-                "lineThickness": 2,
-                "lineAlpha": 1,
-                "bulletSize": 7,
-                "title": "Expenses",
-                "valueField": "expenses"
-            }*/],
-            "rotate": true,
-            "categoryField": "stat",
-            "categoryAxis": {
-                "gridPosition": "start"
-            },
-            "export": {
-                "enabled": true
-             }
-        });
-    }
-
-
-    function drawChart(arrayStats) {
-
-        var dataArray = [];
-        var labelArray = ["Spd","Sp.Def","Sp.Atk","Def","Atk","HP"];
-
-        for (var i=0; i < arrayStats.length; i++) {
-            dataArray.push(arrayStats[i].base_stat);            
-        }
-
-        var data = {
-            labels: labelArray,
-            datasets: [
-                {
-                    label: "Pokemon Stats",                    
-                    fillColor: "rgba(151,187,205,0.2)",
-                    strokeColor: "rgba(151,187,205,1)",
-                    pointColor: "rgba(151,187,205,1)",
-                    pointStrokeColor: "#fff",
-                    pointHighlightFill: "#fff",
-                    pointHighlightStroke: "rgba(151,187,205,1)",
-                    data: dataArray
-                }
-            ]
-        };
-
-        var ctx = $("#myChart").get(0).getContext("2d");        
-        var myRadarChart = new Chart(ctx).Radar(data);        
-    }
 
     function fillNameDiv(sName) {
         $('#name').append(sName);
@@ -274,73 +183,6 @@ function getEvolutionChain(sUrl, pokeId) {
         }
     }
 
-    function drawRow(arrayElem) {
-
-        var row = $('<tr class="move_row"/>');
-        $('#moves').append(row);
-        
-        var move_name = $('<td class="move_name move_cell">' + toTitleCase(arrayElem.move.name) + '</td>');
-        var move_PP = $('<td class="move_PP move_cell"/>');
-        var move_power = $('<td class="move_power move_cell"/>');
-        var move_type = $("<td class='move_type move_cell'/>");
-        var move_effect = $("<td class='move_effect move_cell'/>");
-        
-        var move_level = $("<td class='move_level move_cell'>" + arrayElem.details.level_learned_at + "</td>");
-        var move_method = $("<td class='move_method move_cell'><img alt='" + arrayElem.details.move_learn_method.name +"' title='" + toTitleCase(arrayElem.details.move_learn_method.name) + "' src='./images/moves/" + arrayElem.details.move_learn_method.name + ".png'/></td>");
-        
-        row.append(move_name);
-        row.append(move_type);
-        row.append(move_PP);
-        row.append(move_power);
-        row.append(move_effect);
-        row.append(move_level);
-        row.append(move_method);
-        getMoveType(arrayElem.move.url, move_type);
-        getMoveSpecs(arrayElem.move.url, move_PP, move_power);
-        getMoveEffect(arrayElem.move.url, move_effect, row);
-    }
-
-
-    /* Returns the type of a move and appends it to the table */
-    function getMoveType(sUrl, move_cell) {
-        $.ajax({
-            url: secureAPI(sUrl), 
-            method: 'GET',
-            dataType: 'json',            
-            success: function(result) {
-                move_cell.html($("<img src='./images/types/" + toTitleCase(result.type.name) + ".gif'/>"));
-            }
-        });
-    }
-    /* Returns the type of a move and appends it to the table */
-    function getMoveEffect(sUrl, move_cell,move_row) {
-        $.ajax({
-            url: secureAPI(sUrl), 
-            method: 'GET',
-            dataType: 'json',            
-            success: function(result) {
-                var sMove = result.effect_entries[0].short_effect;
-                sMove = sMove.replace("$effect_chance%", "");
-                move_cell.html(sMove);
-                move_row.attr('title', result.effect_entries[0].effect);
-            }
-        });
-    }
-    
-    /* Returns the type of a move and appends it to the table */
-    function getMoveSpecs(sUrl, move_cell, move_cell2) {
-        $.ajax({
-            url: secureAPI(sUrl), 
-            method: 'GET',
-            dataType: 'json',            
-            success: function(result) {                
-                move_cell.html(result.pp);
-                move_cell2.html(result.power);
-            }
-        });
-    }
-
-
     function getGeneralInfo(objInfo) {
 
         $('#height').append('Height : ' + objInfo.height/10 + ' m');
@@ -353,7 +195,6 @@ function getEvolutionChain(sUrl, pokeId) {
                 $('#type').append('Types : ' + toTitleCase(objInfo.types[i].type.name + ' / '));
         }
     }
-
 
     function getExtendedInfo(objExt) {
         //console.log(objExt)
