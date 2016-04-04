@@ -105,7 +105,7 @@ li a:hover:not(.active) {
 }
 
 .active {
-    background-color: #E41B17;
+    background-color: rgba(228,27,23,0.8);
 }
 
 
@@ -368,4 +368,28 @@ search_pokemon{
     background-color: rgba(255,255,255,0.8);
     align-content: center;
     text-align: center;
+}
+
+#pokeinfo tr th{
+    text-align: right;
+}
+
+#pokeinfo tr td{
+    text-align: left;
+}
+
+[id^=pokemoves].hm2{
+    display: block;    
+    margin-right: auto;
+}
+
+[id$=_statstable].hm2{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+[id^=pokemoves].hm3{
+    display: block;    
+    margin-left: auto;
+    margin-right: auto;
 }

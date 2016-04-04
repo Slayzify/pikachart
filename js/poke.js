@@ -185,14 +185,11 @@ function getEvolutionChain(sUrl, pokeId) {
 
     function getGeneralInfo(objInfo) {
 
-        $('#height').append('Height : ' + objInfo.height/10 + ' m');
-        $('#weight').append('Weight : ' + objInfo.weight/10 + ' kg');
+        $('#height').append(objInfo.height/10 + ' m');
+        $('#weight').append(objInfo.weight/10 + ' kg');
         
         for (var i=0; i < objInfo.types.length; i++) {
-            if (i > 0)
-                $('#type').append(toTitleCase(objInfo.types[i].type.name));
-            else
-                $('#type').append('Types : ' + toTitleCase(objInfo.types[i].type.name + ' / '));
+            $('#type').append('<img src="images/types/' + toTitleCase(objInfo.types[i].type.name) + '.gif"/>');
         }
     }
 
@@ -211,7 +208,7 @@ function getEvolutionChain(sUrl, pokeId) {
         
         for (var i=0; i < xp.length; i++) {            
             if (xp[i].name == objExt.growth_rate.name) {
-                $('#xpclass').append('XP to lvl 100 : ' + xp[i].value);
+                $('#xpclass').append(xp[i].value);
                 break;
             }
         }
@@ -221,7 +218,7 @@ function getEvolutionChain(sUrl, pokeId) {
                 $('#desc').append(objExt.flavor_text_entries[i].flavor_text);
         }
 
-        $('#gender-ratio').append('Gender Ratio : M ' + (genderM - objExt.gender_rate) + '/8 ' + 'F ' + objExt.gender_rate + '/8');        
-        $('#catch-rate').append('Catch Rate : ' + objExt.capture_rate + '/255');
+        $('#gender-ratio').append('M ' + (genderM - objExt.gender_rate) + '/8 ' + 'F ' + objExt.gender_rate + '/8');
+        $('#catch-rate').append(objExt.capture_rate + '/255');
     }
 
