@@ -381,8 +381,8 @@ search_pokemon{
 
 [id^=pokemoves].hm2{
     display: block;    
-    margin-right: auto;
-    margin-left: auto;
+    margin-right: calc((100% - width)/2);
+    margin-left: calc((100% - width)/2);
 }
 
 [id$=_statstable].hm2{
@@ -395,3 +395,20 @@ search_pokemon{
     margin-left: auto;
     margin-right: auto;
 }
+
+#evolutionChain {
+    width: 100%;
+    overflow-x: auto;
+}
+
+#picRow td {
+    max-width: 20%;
+}
+
+@media screen and (max-width: 960px) {
+    [id^=pokemoves].hm2{
+        display: block;
+        margin-left: auto;        
+    }
+}
+
