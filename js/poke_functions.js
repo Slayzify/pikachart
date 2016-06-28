@@ -183,9 +183,10 @@ function selectPoke(poke){
             dataType: 'json',
             success: function(pokemon){
                 var stats = [];
-                for (var i=0; i < pokemon.stats.length; i++) {
+                for (var i=0; i < pokemon.stats.length; i++) {                
                     stats.push(pokemon.stats[i].base_stat);
                 }
+
                 drawChart(pokemon.stats, setPokeData(custom_stats, stats, pokemon, pokemon.name, false));
             }
     });
@@ -203,12 +204,24 @@ function getSide(poke){
     return editableZone(poke).attr('id').replace('pokemon_content','');
 }
 
+function getCheckSide(checkbox){
+    return $(checkbox).parent().parent().parent().parent().attr('id').split('_')[1];
+}
+
 function getContainerSide(container){
     return $(container).attr('id').split('_')[$(container).attr('id').split('_').length - 1];
 }
 
 
 function setPokeData(container, statsval, pokemon, name, isPagePoke){
+
+    //creer la struct poke1 / poke2 avec $data
+    var side = getContainerSide(container);
+    console.log(side);
+    console.log(statsval);
+    console.log(name);
+    console.log(pokemon);
+
     container.empty();
     container.append($("<div id='pokeID-"+ name +"' class='hm'><p>" + toTitleCase(name) + "</p><br/><img src='http://pokeapi.co/media/sprites/pokemon/" + pokemon.id + ".png'/></div>"));
     
@@ -221,7 +234,7 @@ function setPokeData(container, statsval, pokemon, name, isPagePoke){
     var statstable = $("<table id='%Pokemon_statstable' class='hm2'><tr><th>Stat</th><th title='Base Stat'>BS</th><th title='Individual Values'>IV</th><th title='Effort Values'>EV</th><th>Value</th></tr></table>".replace(/%Pokemon/g,name + "_" + getContainerSide(container)))
     //var singlestat = "<div id='poke_stats_%Name' class='stat_container'><span id='stat_name_%Name'>%StatName :</span> <input id='stat_value_%Name' class='stat_value' type='text' value='%Stat_val' readonly='readonly'/></div>";
     var singlestat = "<tr id='%Pokemon_poke_stats_%Name_c'><th>%StatName :</th><td><input id='%Pokemon_bs_%Name' class='stat_value' type='text' value='%Stat_val' readonly='readonly'/></td><td><input id='%Pokemon_iv_%Name' class='stat_value' type='text' value='0'/></td><td><input id='%Pokemon_ev_%Name' class='stat_value' type='text' value='0' /></td><td><input id='%Pokemon_sv_%Name' class='stat_value' type='text' value='%Stat_calc' readonly='readonly'/></td></tr>";
-    var movetable = "<div id='pokemoves_%Side' class='hm" + (isPagePoke?"2":"3") + "'><table id='moves_%Side'><tr><th class'move_header'>Name</th><th class'move_header'>Type</th><th class'move_header'>PP</th><th class'move_header'>Power</th><th class'move_header'>Effect</th><th class'move_header'>Level</th><th class'move_header'>Method</th></tr></table></div>";
+    var movetable = "<div id='pokemoves_%Side' class='hm" + (isPagePoke?"2":"3") + "'><table id='moves_%Side'><tr><th></th><th class'move_header'>Name</th><th class'move_header'>Type</th><th class'move_header'>PP</th><th class'move_header'>Power</th><th class'move_header'>Effect</th><th class'move_header'>Level</th><th class'move_header'>Method</th></tr></table></div>";
     var radar = $("<canvas id='" + name + "-" + $(container).attr('id').replace("custom_stats_","") + "-Radar' height=" + calcHeight($(window).height()) + "  width=" + calcWidth(container.width()) + "></canvas>");
     container.append($("<br/>"));
     var barchart = $(('<div id="%Pokemon_barChart"></div>').replace(/%Pokemon/g,name + "_" + getContainerSide(container)));
@@ -405,7 +418,7 @@ function calcStat(bs, iv, ev, lvl, ns, isHP){
 }
 
 function updateRadar(radar, stats){    
-    var chartPoints = $(radar).data('test');    
+    var chartPoints = $(radar).data('test');
     for (var i = 0; i < stats.length; i++){        
         chartPoints.datasets[0].points[i].value = stats[i];
     }
@@ -433,46 +446,105 @@ function drawMoveTable(movetable, moves) {
         }
     }
 
-    function drawMoveRow(movetable, move) {
-        var row = $('<tr class="move_row"/>');
-        movetable.append(row);
-        
-        var move_name = $('<td class="move_name move_cell">' + toTitleCase(move.move.name) + '</td>');
-        var move_PP = $('<td class="move_PP move_cell"/>');
-        var move_power = $('<td class="move_power move_cell"/>');
-        var move_type = $("<td class='move_type move_cell'/>");
-        var move_effect = $("<td class='move_effect move_cell'/>");
-        
-        var move_level = $("<td class='move_level move_cell'>" + move.details.level_learned_at + "</td>");
-        var move_method = $("<td class='move_method move_cell'><img alt='" + move.details.move_learn_method.name +"' title='" + toTitleCase(move.details.move_learn_method.name) + "' src='./images/moves/" + move.details.move_learn_method.name + ".png'/></td>");
-        
-        row.append(move_name);
-        row.append(move_type);
-        row.append(move_PP);
-        row.append(move_power);
-        row.append(move_effect);
-        row.append(move_level);
-        row.append(move_method);
-        getMoveSpecs(move.move.url, move_type, move_PP, move_power, move_effect, row);
-    }
+function drawMoveRow(movetable, move) {
+    var row = $('<tr class="move_row"/>');
+    movetable.append(row);
 
-
-    /* Gets the specs of a move and appends it to the table */
-    function getMoveSpecs(sUrl, move_type, move_pp, move_power, move_effect, move_row) {
-        $.ajax({
-            url: secureAPI(sUrl), 
-            method: 'GET',
-            dataType: 'json',            
-            success: function(result) {
-                move_type.html($("<img src='./images/types/" + toTitleCase(result.type.name) + ".gif'/>"));
-                move_pp.html(result.pp);
-                move_power.html(result.power);
-                var sMove = result.effect_entries[0].short_effect;
-                sMove = sMove.replace("$effect_chance%", "");
-                move_effect.html(sMove);
-                move_row.attr('title', result.effect_entries[0].effect);
-            }
-        });
-    }
+    var move_check = $('<td class="move_name move_cell"><input class="move_check" type="checkbox" onchange="checkMove(this)"></td>')
+    var move_name = $('<td class="move_name move_cell">' + toTitleCase(move.move.name) + '</td>');
+    var move_PP = $('<td class="move_PP move_cell"/>');
+    var move_power = $('<td class="move_power move_cell"/>');
+    var move_type = $("<td class='move_type move_cell'/>");
+    var move_effect = $("<td class='move_effect move_cell'/>");
+    
+    var move_level = $("<td class='move_level move_cell'>" + move.details.level_learned_at + "</td>");
+    var move_method = $("<td class='move_method move_cell'><img alt='" + move.details.move_learn_method.name +"' title='" + toTitleCase(move.details.move_learn_method.name) + "' src='./images/moves/" + move.details.move_learn_method.name + ".png'/></td>");
     
     
+    row.append(move_check);
+    row.append(move_name);
+    row.append(move_type);
+    row.append(move_PP);
+    row.append(move_power);
+    row.append(move_effect);
+    row.append(move_level);
+    row.append(move_method);
+    getMoveSpecs(move.move.url, move_type, move_PP, move_power, move_effect, row, move.move.name);
+    //console.log($(movetable).find('.move_check').data("move").name);
+}
+
+
+/* Gets the specs of a move and appends it to the table */
+function getMoveSpecs(sUrl, move_type, move_pp, move_power, move_effect, move_row, move_name) {
+    $.ajax({
+        url: secureAPI(sUrl), 
+        method: 'GET',
+        dataType: 'json',            
+        success: function(result) {
+            move_type.html($("<img src='./images/types/" + toTitleCase(result.type.name) + ".gif'/>"));
+            move_pp.html(result.pp);
+            move_power.html(result.power);
+            var sMove = result.effect_entries[0].short_effect;
+            sMove = sMove.replace("$effect_chance%", "");
+            move_effect.html(sMove);
+            move_row.attr('title', result.effect_entries[0].effect);
+
+            c_type = result.type.name;
+            c_power = result.power;
+            c_accuracy = result.accuracy;
+            c_pp = result.pp;
+
+            var battle_move = {
+        name : move_name,
+        type : result.type.name,
+        power : result.power,
+        accuracy : result.accuracy,
+        pp : result.pp
+    };
+    $(move_row).find(".move_check").data("move",battle_move);
+        }
+    });
+}
+    
+    
+function sendFightData() {
+
+    /*
+    1. generer json
+    2. inserer en base
+    3. recuperer id battle
+    */
+
+    var fight = {
+        poke1 : "salameche",
+        poke2 : "bulbizarre"
+    };
+
+    $.ajax({
+        url: 'https://api.mongolab.com/api/1/databases/pikadb/collections/fight?apiKey=Iq2U_zn9n2pFQk2nyLNnHzPL8EtNr2t5',
+        type: 'POST',
+        data: JSON.stringify(fight),
+        contentType: 'application/json',
+        success: function(result) {
+            console.log(result._id.$oid);
+        }
+    });
+}
+
+
+function checkMove(checkbox) {
+
+    //getCheckSide(checkbox);
+    //compter
+    //si > 4 disable tous les checkbox checked = false
+    //si > 1 vérifier data du bouton fight
+        //si présence poke_left (utiliser getSide() et getContainerSide())
+        //si présence poke_right
+        //display bouton fight
+        //sinon display none bouton fight
+    //si uncheck et moves < 1 poke_left/right = null
+    //('#fightBtn').data("poke_" + getCheckSide(checkbox),)
+    console.log($(checkbox).data('move'));
+}
+
+

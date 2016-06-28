@@ -15,6 +15,12 @@ a {
     text-decoration: none;
 }
 
+
+#fightBtn {
+    margin-left: 47%;
+}
+
+
 .white-popup {
   position: relative;
   background: #FFF;
