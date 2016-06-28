@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>PikaChart</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png" />
+    <link rel="stylesheet" href="css/jquery-ui.css">
+    <link rel="stylesheet" href="css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" href="css/magnific-popup.css">
+    <script src="js/jquery-1.10.2.js"></script>
+    <script src="js/jquery-ui.js"></script>
+    <script src="js/jquery.dataTables.js"></script>
+    <script src="pokedex/pokedexjs.js"></script>
+    <script src="js/poke_functions.js"></script>
+    <script src="js/poke_load.js"></script>
+    <script src="js/jquery.magnific-popup.js"></script>
+    <script>
+        $(function(){
+            $('[id^="pokeimport_"]').each(function(){
+                $(this).load($(this).attr('id').replace('pokeimport_','') + '.html');
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id='pokeimport_header'></div>
+</div>
+</body>
+</html>
+
+<script>
+    function selectMenu() {
+        $('#index').addClass('active');
+    }
+</script>
