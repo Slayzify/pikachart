@@ -510,11 +510,12 @@ function sendFightData() {
     
     var statPoke1 = getAllStats($('#custom_stats_left'));
     var statPoke2 = getAllStats($('#custom_stats_left'));
-
+    
     var fight = {
         fightLog : '',
         poke1 : {
             name : $('#custom_stats_left').data('poke_left').name,
+            level : parseInt($('#'+$('#custom_stats_left').data('poke_left').name+'_left_lvl').val()),
             type1 : $('#custom_stats_left').data('poke_left').types[0].type.name,
             type2 : typeof $('#custom_stats_left').data('poke_left').types[1] === 'undefined' ? '' : $('#custom_stats_left').data('poke_left').types[1].type.name,
             speed : statPoke1[0],
@@ -523,13 +524,14 @@ function sendFightData() {
             defense : statPoke1[3],
             attack : statPoke1[4],
             maxHP : statPoke1[5],
-            currentHP : 100,
+            currentHP : statPoke1[5],
             moves : $('#fightBtn').data('moves_poke_left'),
             frontSprite : $('#custom_stats_left').data('poke_left').sprites.front_default,
             backSprite : $('#custom_stats_left').data('poke_left').sprites.back_default
         },
         poke2 : {
             name : $('#custom_stats_right').data('poke_right').name,
+            level : parseInt($('#'+$('#custom_stats_right').data('poke_right').name+'_right_lvl').val()),
             type1 : $('#custom_stats_right').data('poke_right').types[0].type.name,
             type2 : typeof $('#custom_stats_right').data('poke_right').types[1] === 'undefined' ? '' : $('#custom_stats_right').data('poke_right').types[1].type.name,
             speed : statPoke2[0],
@@ -538,7 +540,7 @@ function sendFightData() {
             defense : statPoke2[3],
             attack : statPoke2[4],
             maxHP : statPoke2[5],
-            currentHP : 100,
+            currentHP : statPoke2[5],
             moves : $('#fightBtn').data('moves_poke_right'),
             frontSprite : $('#custom_stats_right').data('poke_right').sprites.front_default,
             backSprite : $('#custom_stats_right').data('poke_right').sprites.back_default
@@ -601,5 +603,6 @@ function getAllStats(sideContainer) {
     inputArray.each(function(){
         tab.push(parseInt($(this).val()));
     })
+
     return tab;
 }
