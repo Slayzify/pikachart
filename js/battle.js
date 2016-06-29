@@ -79,7 +79,8 @@ function updateMoves(attack_button){
 }
 
 function initTurn(attack_button){
-    
+    var ennemy = $("#ennemy_box").data("poke");
+    var defender = $().data("poke");
     //
     
 }
