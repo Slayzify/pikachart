@@ -18,12 +18,19 @@
     <script src="js/battle.js"></script>
     <script src="js/jquery.magnific-popup.js"></script>
     <style>
-        .hp_bar{width : 100%;}
+        .hp_bar{width : 60%; min-width:150px}
         #logbox{float:left;display:inline-block;}
-        .fighter_box{float:left; margin-left:15px};
+        .fighter_box{margin-left:15px;}
+        #ennemy_box{}
+        #ennemy_Sprite{margin-right:auto;}
+        #defender_box{align:left;}
+        #defender_Sprite{}
+        #battle_container{background-color:rgba(255,255,255,0.6); border-radius:15px; max-width:400px;}
+        #battle_screen{min-height:200px;}
         .fullHP div{background:#00AA00;}
         .midHP div{background:#FF9000;}
         .lowHP div{background:#D00000;}
+        #body2{background-color:rgba(255,255,255,0.4)}
     
     </style>
     <script>
@@ -37,6 +44,7 @@
 <body>
     <div id='pokeimport_header'></div>
     <div id="body2">
+        <b>Please select your battle :</b></br>
     <select id='battle_id_selection' width></select> <button id='battlebutton' onclick="selectedBattle(true)">Fight</button>
     <div id='battle_container'>
     </div>

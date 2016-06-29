@@ -41,46 +41,87 @@ function beginBattle(idBattle){
                 //empty container
                 $('#battle_container').empty();
                 //reset content to empty
-                $('#battle_container').append($("<audio id='battle_audio' style='display:none;' controls autoplay></audio><div id='battle_box'><div id='battle_screen'><div id='defender_box' class='fighter_box'><div class='hp_bar'></div></div><div id='ennemy_box' class='fighter_box'><div class='hp_bar'></div></div></div><div id='battle_moves'></div></div><div id='logbox'>Battle log :</br></div>"));
+                $('#battle_container').append($("<audio id='battle_audio' style='display:none;' controls autoplay></audio><div id='battle_box'><div id='battle_screen'><div id='ennemy_box' class='fighter_box'><div class='hp_bar'></div><img id='ennemy_Sprite'></img></div><div id='defender_box'  class='fighter_box'><img id='defender_Sprite'></img><div class='hp_bar'></div></div></div></br><div id='battle_moves' ></div></div><div id='logbox'>Battle log :</br></div>"));
+                
+                //store json
+                $("#battle_container").data("battle",result);
                 
                 //load ennemy
                 $('#ennemy_box .hp_bar').append($('<div id="ennemy_hp" class="fullHP"></div>'));
                 $('#ennemy_hp').progressbar({ value:parseInt(100*result.poke2.currentHP/result.poke2.maxHP)});
-                $('#ennemy_box').append($('<img src="' + result.poke2.frontSprite + '"></img>'));
+                $('#ennemy_Sprite').attr("src", result.poke2.frontSprite);
                 $('#ennemy_box').data("poke",result.poke2);
                 
                 //load defender
-                $('#defender_box').append($('<img src="' + result.poke1.backSprite + '"></img>'));
+                $('#defender_Sprite').attr("src", result.poke1.backSprite);
                 $('#defender_box .hp_bar').append($('<div id="defender_hp" class="fullHP"></div>'));
                 $('#defender_hp').progressbar({ value: parseInt(100*result.poke1.currentHP/result.poke1.maxHP)});
                 $('#defender_box').data("poke",result.poke1);
                 
                 //load moves
                 for(i=0;i<result.poke1.moves.length;i++){
-                    var name = 'move_' + result.poke1.moves[i].name;
-                    var attack = $('<button id="' + name + '" onclick="initTurn(this)">' + result.poke1.moves[i].name + '</button>');
+                    var name = 'poke_move_' + result.poke1.moves[i].name;
+                    var attack = $('<button id="' + name + '" onclick="initTurn(this)">' + result.poke1.moves[i].name + ' : ' + result.poke1.moves[i].pp + '</button>');
                     $('#battle_moves').append(attack);
-                    $(name).data("move",result.poke1.moves[i]);
+                    $("#"+name).data("move",result.poke1.moves[i]);
                 }
                 
                 //load log
                 $('#logbox').append(result.fightLog);
                 
-                //music battle
-                $('#battle_audio').append($('<source src="./sound/battle.mp3" type="audio/mpeg">'));
-            }  
+                //music battle-----------------------
+                //$('#battle_audio').append($('<source src="./sound/battle.mp3" type="audio/mpeg">'));
+            }
     })
 }
 
 function updateMoves(attack_button){
+    
+    
     //countPP
     //updateData
     //disable if needed
+    //return attack total
+}
+
+function updateHP(){
+    var battle = $("#battle_container").data("battle");
+    $("#defender_hp").progressbar('value', parseInt(100*battle.poke1.currentHP/battle.poke1.maxHP));
+    $("#ennemy_hp").progressbar( 'value', parseInt(100*battle.poke2.currentHP/battle.poke2.maxHP));
+    
+    //console.log("curr : " + battle.poke1.currentHP + ", max : " + battle.poke1.maxHP);
+    //console.log("curr : " + battle.poke2.currentHP + ", max : " + battle.poke2.maxHP);
 }
 
 function initTurn(attack_button){
+    var battle = $("#battle_container").data("battle");
     var ennemy = $("#ennemy_box").data("poke");
-    var defender = $().data("poke");
-    //
+    var defender = $("#defender_box").data("poke");
+    var log = battle.fightLog;
+    
+    
+    
+    
+    
+    
+    log += defender.name + " used " + $(attack_button).data("move").name;
+    $("#logbox").append("</br>" + defender.name + " used " + $(attack_button).data("move").name + "!")
+    
+    ennemy.currentHP -= 2;
+    
+    update
+    battle.poke1 = defender;
+    battle.poke2 = ennemy;
+    $("#battle_container").data("battle",battle);
+    $("#ennemy_box").data("poke",ennemy);
+    $("#defender_box").data("poke", defender);
+    updateHP();
+    
+    
+    
+    
+    
+    
+    //count attacks if == 0 -> loop
     
 }
