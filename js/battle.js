@@ -61,7 +61,7 @@ function beginBattle(idBattle){
                 //load moves
                 for(i=0;i<result.poke1.moves.length;i++){
                     var name = 'poke_move_' + result.poke1.moves[i].name;
-                    var attack = $('<button id="' + name + '" onclick="initTurn(this)">' + result.poke1.moves[i].name + ' | ' + result.poke1.moves[i].pp + ' PP</button>');
+                    var attack = $('<button id="' + name + '" onclick="initTurn(this)"' + ((result.poke1.currentHP <= 0 || result.poke2.currentHP <= 0)?'disabled="true"':'') +'>' + result.poke1.moves[i].name + ' | ' + result.poke1.moves[i].pp + ' PP</button>');
                     $('#battle_moves').append(attack);
                     $("#"+name).data("move",result.poke1.moves[i]);
                 }
@@ -77,11 +77,12 @@ function beginBattle(idBattle){
 
 function updateMoves(attack_button, over){
     
-    
-    //countPP
-    //updateData
-    //disable if needed
-    //return attack total
+    var move = $(attack_button).data("move");
+        move.pp-= 1;
+    if (move.pp <= 0)
+        $(attack_button).attr("disabled",true);
+    $(attack_button).data("move",move);
+    $(attack_button).html(move.name + " | " + move.pp + " PP");
 }
 
 function updateHP(){
@@ -91,6 +92,10 @@ function updateHP(){
     
     //console.log("curr : " + battle.poke1.currentHP + ", max : " + battle.poke1.maxHP);
     //console.log("curr : " + battle.poke2.currentHP + ", max : " + battle.poke2.maxHP);
+}
+
+function HPStage(pokemon){
+    return pokemon.currentHP/pokemon.maxHP;
 }
 
 function initTurn(attack_button){
@@ -109,9 +114,54 @@ function initTurn(attack_button){
     $("#logbox").append("</br>" + defender.name + " used " + $(attack_button).data("move").name + "!")
     
     ennemy.currentHP -= (((2*defender.level+10)/250)*(defender.attack/ennemy.defense)*attack.power)+2;
-    console.log("Attack power : " + (((2*100.0+10)/250.0)*(defender.attack/ennemy.defense)*attack.power)+2);
-    console.log(defender.attack + "" + ennemy.currentHP);
+        
+        
+    if (defender.currentHP >0 && ennemy.currentHP >0){
+        if (ennemy.moves.length = 1){
+            if(ennemy.moves[0].pp <= 0){
+                defender.currentHP -= (((2*ennemy.level+10)/250)*(ennemy.attack/defender.defense)*20)+2;
+                ennemy.currentHP -= (((2*defender.level+10)/250)*(ennemy.attack/ennemy.defense)*10)+2;
+            }else{
+                defender.currentHP -= (((2*ennemy.level+10)/250)*(ennemy.attack/defender.defense)*ennemy.moves[0].power)+2;
+                ennemy.moves[0]-=1;
+            }
+        }else{
+            var iMove = Math.random()*ennemy.moves.length;
+            if(ennemy.moves[iMove].pp <= 0){
+                defender.currentHP -= (((2*ennemy.level+10)/250)*(ennemy.attack/defender.defense)*20)+2;
+                ennemy.currentHP -= (((2*defender.level+10)/250)*(ennemy.attack/ennemy.defense)*10)+2;
+            }else{
+                defender.currentHP -= (((2*ennemy.level+10)/250)*(ennemy.attack/defender.defense)*ennemy.moves[iMove].power)+2;
+                ennemy.moves[iMove]-=1;
+            }
+        }
+    }
     
+    if (ennemy.currentHP <= 0 || defender.currentHP <=0)
+        $('[id^="poke_move_"]').each(function(){
+            $(this).attr("disabled",true);
+        })
+    
+    
+    //updateHP
+    if(HPStage(defender) < 0.5 && HPStage(defender) > 0.2){
+        $("#defender_hp").removeClass("fullHP");
+        $("#defender_hp").addClass("midHP");
+    }
+    if(HPStage(defender) <= 0.2){
+        $("#defender_hp").removeClass("midHP");
+        $("#defender_hp").addClass("lowHP");
+    }
+    if(HPStage(ennemy) < 0.5 && HPStage(ennemy) > 0.2){
+        $("#ennemy_hp").removeClass("fullHP");
+        $("#ennemy_hp").addClass("midHP");
+    }
+    if(HPStage(ennemy) <= 0.2){
+        $("#ennemy_hp").removeClass("midHP");
+        $("#ennemy_hp").addClass("lowHP");
+    }
+    
+        
     updateMoves(attack_button);
     
     battle.poke1 = defender;
@@ -120,11 +170,6 @@ function initTurn(attack_button){
     $("#ennemy_box").data("poke",ennemy);
     $("#defender_box").data("poke", defender);
     updateHP();
-    
-    
-    
-    
-    
     
     //count attacks if == 0 -> loop
     
