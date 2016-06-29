@@ -563,8 +563,14 @@ function sendFightData() {
 function checkMove(checkbox) {
 
     var side = getCheckSide(checkbox);
-    
-    if ($('table#moves_' + side + ' input:checkbox:checked').length <= 4) {        
+
+    //Affichage du bouton Fight, si 2 checkbox au moins
+    if ($('table#moves_left input:checkbox:checked').length > 0 && $('table#moves_right input:checkbox:checked').length > 0)
+        $('#fightBtn').css({'display':'inline'});
+    else
+        $('#fightBtn').css({'display':'none'});
+
+    if ($('table#moves_' + side + ' input:checkbox:checked').length <= 4) {
         $('table#moves_' + side + ' input[type=checkbox]').removeAttr('disabled');
 
         //On décoche, on retire le move
@@ -580,14 +586,12 @@ function checkMove(checkbox) {
             });
                         
             $('#fightBtn').data('moves_poke_'+side, tmp);            
-            //console.log($('#fightBtn').data('moves_poke_'+side));
         }
 
         //on ajoute les valeurs du move
         else {
 
-            $('#fightBtn').data('moves_poke_'+side).push($(checkbox).data('move'));
-            //console.log($('#fightBtn').data('moves_poke_'+side));
+            $('#fightBtn').data('moves_poke_'+side).push($(checkbox).data('move'));            
         }
 
         if ($('table#moves_' + side + ' input:checkbox:checked').length == 4)

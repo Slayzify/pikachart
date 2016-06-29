@@ -166,6 +166,17 @@ function initTurn(attack_button){
     
     battle.poke1 = defender;
     battle.poke2 = ennemy;
+
+    $.ajax({
+        url: 'https://api.mongolab.com/api/1/databases/pikadb/collections/fight/'+ battle._id.$oid +'?apiKey=Iq2U_zn9n2pFQk2nyLNnHzPL8EtNr2t5',
+        type: 'PUT',
+        data: JSON.stringify(battle),
+        contentType: 'application/json',
+        success: function(result) {
+            alert('updated');
+        }
+    });
+
     $("#battle_container").data("battle",battle);
     $("#ennemy_box").data("poke",ennemy);
     $("#defender_box").data("poke", defender);
