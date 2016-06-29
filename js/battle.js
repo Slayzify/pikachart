@@ -31,6 +31,20 @@ function selectedBattle(isSelect){
     }
 }
 
+function deleteBattle(){
+    var idDelete = $('#battle_id_selection').val();
+    
+    var sUrl = "https://api.mongolab.com/api/1/databases/pikadb/collections/fight/" + idDelete + "?apiKey=Iq2U_zn9n2pFQk2nyLNnHzPL8EtNr2t5";
+    $.ajax({
+            url: secureAPI(sUrl), 
+            method: 'GET',
+            dataType: 'json',            
+            success: function(result) {
+                //delete here!!!!!!!!!!!!
+            }
+    });
+}
+
 function beginBattle(idBattle){
     var sUrl = "https://api.mongolab.com/api/1/databases/pikadb/collections/fight/" + idBattle + "?apiKey=Iq2U_zn9n2pFQk2nyLNnHzPL8EtNr2t5";
     $.ajax({
@@ -113,25 +127,25 @@ function initTurn(attack_button){
     log += defender.name + " used " + $(attack_button).data("move").name;
     $("#logbox").append("</br>" + defender.name + " used " + $(attack_button).data("move").name + "!")
     
-    ennemy.currentHP -= (((2*defender.level+10)/250)*(defender.attack/ennemy.defense)*attack.power)+2;
+    ennemy.currentHP -= (((2*defender.level+10)/250)*(defender.attack/ennemy.defense)*attack.power)/2+2;
         
         
     if (defender.currentHP >0 && ennemy.currentHP >0){
         if (ennemy.moves.length = 1){
             if(ennemy.moves[0].pp <= 0){
-                defender.currentHP -= (((2*ennemy.level+10)/250)*(ennemy.attack/defender.defense)*20)+2;
-                ennemy.currentHP -= (((2*defender.level+10)/250)*(ennemy.attack/ennemy.defense)*10)+2;
+                defender.currentHP -= (((2*ennemy.level+10)/250)*(ennemy.attack/defender.defense)*20)/2+2;
+                ennemy.currentHP -= (((2*defender.level+10)/250)*(ennemy.attack/ennemy.defense)*10)/2+2;
             }else{
-                defender.currentHP -= (((2*ennemy.level+10)/250)*(ennemy.attack/defender.defense)*ennemy.moves[0].power)+2;
+                defender.currentHP -= (((2*ennemy.level+10)/250)*(ennemy.attack/defender.defense)*ennemy.moves[0].power)/2+2;
                 ennemy.moves[0]-=1;
             }
         }else{
             var iMove = Math.random()*ennemy.moves.length;
             if(ennemy.moves[iMove].pp <= 0){
-                defender.currentHP -= (((2*ennemy.level+10)/250)*(ennemy.attack/defender.defense)*20)+2;
-                ennemy.currentHP -= (((2*defender.level+10)/250)*(ennemy.attack/ennemy.defense)*10)+2;
+                defender.currentHP -= (((2*ennemy.level+10)/250)*(ennemy.attack/defender.defense)*20)/2+2;
+                ennemy.currentHP -= (((2*defender.level+10)/250)*(ennemy.attack/ennemy.defense)*10)/2+2;
             }else{
-                defender.currentHP -= (((2*ennemy.level+10)/250)*(ennemy.attack/defender.defense)*ennemy.moves[iMove].power)+2;
+                defender.currentHP -= (((2*ennemy.level+10)/250)*(ennemy.attack/defender.defense)*ennemy.moves[iMove].power)/2+2;
                 ennemy.moves[iMove]-=1;
             }
         }
@@ -166,6 +180,7 @@ function initTurn(attack_button){
     
     battle.poke1 = defender;
     battle.poke2 = ennemy;
+    battle.fightLog = log;
 
     $.ajax({
         url: 'https://api.mongolab.com/api/1/databases/pikadb/collections/fight/'+ battle._id.$oid +'?apiKey=Iq2U_zn9n2pFQk2nyLNnHzPL8EtNr2t5',
@@ -173,7 +188,6 @@ function initTurn(attack_button){
         data: JSON.stringify(battle),
         contentType: 'application/json',
         success: function(result) {
-            alert('updated');
         }
     });
 
