@@ -58,7 +58,7 @@ function beginBattle(idBattle){
                 //load moves
                 for(i=0;i<result.poke1.moves.length;i++){
                     var name = 'move_' + result.poke1.moves[i].name;
-                    var attack = $('<button id="' + name + '">' + result.poke1.moves[i].name + '</button>');
+                    var attack = $('<button id="' + name + '" onclick="initTurn(this)">' + result.poke1.moves[i].name + '</button>');
                     $('#battle_moves').append(attack);
                     $(name).data("move",result.poke1.moves[i]);
                 }
@@ -72,12 +72,14 @@ function beginBattle(idBattle){
     })
 }
 
-function updateMoves(){
+function updateMoves(attack_button){
     //countPP
     //updateData
     //disable if needed
 }
 
 function initTurn(attack_button){
+    
+    //
     
 }
