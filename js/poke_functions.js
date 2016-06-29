@@ -497,7 +497,7 @@ function getMoveSpecs(sUrl, move_type, move_pp, move_power, move_effect, move_ro
                 type : result.type.name,
                 power : result.power,
                 accuracy : result.accuracy,
-                pp : result.pp
+                pp : result.pp / 5
             };
 
             $(move_row).find(".move_check").data("move", battle_move);
@@ -507,14 +507,9 @@ function getMoveSpecs(sUrl, move_type, move_pp, move_power, move_effect, move_ro
     
     
 function sendFightData() {
-
-    //creer le json avec les bonnes valeurs
-    //inserer en bdd
-    console.log($('#fightBtn').data('moves_poke_left'));
-    console.log($('#fightBtn').data('moves_poke_right'));
-    console.log($('#custom_stats_left').data('poke_left'));
-    console.log($('#custom_stats_right').data('poke_right'));
     
+    var statPoke1 = getAllStats($('#custom_stats_left'));
+    var statPoke2 = getAllStats($('#custom_stats_left'));
 
     var fight = {
         fightLog : '',
@@ -522,12 +517,12 @@ function sendFightData() {
             name : $('#custom_stats_left').data('poke_left').name,
             type1 : $('#custom_stats_left').data('poke_left').types[0].type.name,
             type2 : typeof $('#custom_stats_left').data('poke_left').types[1] === 'undefined' ? '' : $('#custom_stats_left').data('poke_left').types[1].type.name,
-            speed : $('#custom_stats_left').data('poke_left').stats[0].base_stat,
-            spDef : $('#custom_stats_left').data('poke_left').stats[1].base_stat,
-            spAtk : $('#custom_stats_left').data('poke_left').stats[2].base_stat,
-            defense : $('#custom_stats_left').data('poke_left').stats[3].base_stat,
-            attack : $('#custom_stats_left').data('poke_left').stats[4].base_stat,
-            maxHP : $('#custom_stats_left').data('poke_left').stats[5].base_stat,
+            speed : statPoke1[0],
+            spDef : statPoke1[1],
+            spAtk : statPoke1[2],
+            defense : statPoke1[3],
+            attack : statPoke1[4],
+            maxHP : statPoke1[5],
             currentHP : 100,
             moves : $('#fightBtn').data('moves_poke_left'),
             frontSprite : $('#custom_stats_left').data('poke_left').sprites.front_default,
@@ -537,12 +532,12 @@ function sendFightData() {
             name : $('#custom_stats_right').data('poke_right').name,
             type1 : $('#custom_stats_right').data('poke_right').types[0].type.name,
             type2 : typeof $('#custom_stats_right').data('poke_right').types[1] === 'undefined' ? '' : $('#custom_stats_right').data('poke_right').types[1].type.name,
-            speed : $('#custom_stats_right').data('poke_right').stats[0].base_stat,
-            spDef : $('#custom_stats_right').data('poke_right').stats[1].base_stat,
-            spAtk : $('#custom_stats_right').data('poke_right').stats[2].base_stat,
-            defense : $('#custom_stats_right').data('poke_right').stats[3].base_stat,
-            attack : $('#custom_stats_right').data('poke_right').stats[4].base_stat,
-            maxHP : $('#custom_stats_right').data('poke_right').stats[5].base_stat,
+            speed : statPoke2[0],
+            spDef : statPoke2[1],
+            spAtk : statPoke2[2],
+            defense : statPoke2[3],
+            attack : statPoke2[4],
+            maxHP : statPoke2[5],
             currentHP : 100,
             moves : $('#fightBtn').data('moves_poke_right'),
             frontSprite : $('#custom_stats_right').data('poke_right').sprites.front_default,
@@ -557,7 +552,7 @@ function sendFightData() {
         contentType: 'application/json',
         success: function(result) {
             console.log(result._id.$oid);
-            window.location.href = '/battle.html?id='+result._id.$oid;
+            window.location.href = 'battle.html?id='+result._id.$oid;
         }
     });
 }
@@ -599,3 +594,12 @@ function checkMove(checkbox) {
 }
 
 
+function getAllStats(sideContainer) {
+
+    var tab = [];
+    var inputArray = sideContainer.find('[id*="_sv_"]');
+    inputArray.each(function(){
+        tab.push(parseInt($(this).val()));
+    })
+    return tab;
+}
