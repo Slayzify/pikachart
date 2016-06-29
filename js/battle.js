@@ -34,14 +34,13 @@ function selectedBattle(isSelect){
 function deleteBattle(){
     var idDelete = $('#battle_id_selection').val();
     
-    var sUrl = "https://api.mongolab.com/api/1/databases/pikadb/collections/fight/" + idDelete + "?apiKey=Iq2U_zn9n2pFQk2nyLNnHzPL8EtNr2t5";
     $.ajax({
-            url: secureAPI(sUrl), 
-            method: 'GET',
-            dataType: 'json',            
-            success: function(result) {
-                //delete here!!!!!!!!!!!!
-            }
+        url: 'https://api.mongolab.com/api/1/databases/pikadb/collections/fight/'+ idDelete +'?apiKey=Iq2U_zn9n2pFQk2nyLNnHzPL8EtNr2t5',
+        type: 'DELETE',
+        async: true,
+        timeout: 300000,
+        success: function(data) { alert('deleted'); },
+        error: function (xhr, status, err) { alert(err); }
     });
 }
 
