@@ -15,7 +15,17 @@
     <script src="pokedex/pokedexjs.js"></script>
     <script src="js/poke_functions.js"></script>
     <script src="js/poke_load.js"></script>
+    <script src="js/battle.js"></script>
     <script src="js/jquery.magnific-popup.js"></script>
+    <style>
+        .hp_bar{width : 100%;}
+        #logbox{float:left;display:inline-block;}
+        .fighter_box{float:left; margin-left:15px};
+        .fullHP div{background:#00AA00;}
+        .midHP div{background:#FF9000;}
+        .lowHP div{background:#D00000;}
+    
+    </style>
     <script>
         $(function(){
             $('[id^="pokeimport_"]').each(function(){
@@ -26,8 +36,12 @@
 </head>
 <body>
     <div id='pokeimport_header'></div>
-    <select id='battle_id_selection' width></select> <button id='battlebutton' onclick="BeginBattle()">Fight</button>
+    <div id="body2">
+    <select id='battle_id_selection' width></select> <button id='battlebutton' onclick="selectedBattle(true)">Fight</button>
+    <div id='battle_container'>
+    </div>
 </div>
+    </div>
 </body>
 </html>
 
