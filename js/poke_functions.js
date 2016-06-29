@@ -215,12 +215,12 @@ function getContainerSide(container){
 
 function setPokeData(container, statsval, pokemon, name, isPagePoke){
 
-    //creer la struct poke1 / poke2 avec $data
+    //initialisation des structures de données pour le simulateur
     var side = getContainerSide(container);
-    console.log(side);
-    console.log(statsval);
-    console.log(name);
-    console.log(pokemon);
+    $(container).data('poke_' + side, pokemon);
+    $('#fightBtn').data('moves_poke_'+side, []);
+
+    console.log($(container).data('poke_' + side));
 
     container.empty();
     container.append($("<div id='pokeID-"+ name +"' class='hm'><p>" + toTitleCase(name) + "</p><br/><img src='http://pokeapi.co/media/sprites/pokemon/" + pokemon.id + ".png'/></div>"));
@@ -460,7 +460,6 @@ function drawMoveRow(movetable, move) {
     var move_level = $("<td class='move_level move_cell'>" + move.details.level_learned_at + "</td>");
     var move_method = $("<td class='move_method move_cell'><img alt='" + move.details.move_learn_method.name +"' title='" + toTitleCase(move.details.move_learn_method.name) + "' src='./images/moves/" + move.details.move_learn_method.name + ".png'/></td>");
     
-    
     row.append(move_check);
     row.append(move_name);
     row.append(move_type);
@@ -469,8 +468,7 @@ function drawMoveRow(movetable, move) {
     row.append(move_effect);
     row.append(move_level);
     row.append(move_method);
-    getMoveSpecs(move.move.url, move_type, move_PP, move_power, move_effect, row, move.move.name);
-    //console.log($(movetable).find('.move_check').data("move").name);
+    getMoveSpecs(move.move.url, move_type, move_PP, move_power, move_effect, row, move.move.name);    
 }
 
 
@@ -495,13 +493,14 @@ function getMoveSpecs(sUrl, move_type, move_pp, move_power, move_effect, move_ro
             c_pp = result.pp;
 
             var battle_move = {
-        name : move_name,
-        type : result.type.name,
-        power : result.power,
-        accuracy : result.accuracy,
-        pp : result.pp
-    };
-    $(move_row).find(".move_check").data("move",battle_move);
+                name : move_name,
+                type : result.type.name,
+                power : result.power,
+                accuracy : result.accuracy,
+                pp : result.pp
+            };
+
+            $(move_row).find(".move_check").data("move", battle_move);
         }
     });
 }
@@ -509,15 +508,46 @@ function getMoveSpecs(sUrl, move_type, move_pp, move_power, move_effect, move_ro
     
 function sendFightData() {
 
-    /*
-    1. generer json
-    2. inserer en base
-    3. recuperer id battle
-    */
+    //creer le json avec les bonnes valeurs
+    //inserer en bdd
+    console.log($('#fightBtn').data('moves_poke_left'));
+    console.log($('#fightBtn').data('moves_poke_right'));
+    console.log($('#custom_stats_left').data('poke_left'));
+    console.log($('#custom_stats_right').data('poke_right'));
+    
 
     var fight = {
-        poke1 : "salameche",
-        poke2 : "bulbizarre"
+        fightLog : '',
+        poke1 : {
+            name : $('#custom_stats_left').data('poke_left').name,
+            type1 : $('#custom_stats_left').data('poke_left').types[0].type.name,
+            type2 : typeof $('#custom_stats_left').data('poke_left').types[1] === 'undefined' ? '' : $('#custom_stats_left').data('poke_left').types[1].type.name,
+            speed : $('#custom_stats_left').data('poke_left').stats[0].base_stat,
+            spDef : $('#custom_stats_left').data('poke_left').stats[1].base_stat,
+            spAtk : $('#custom_stats_left').data('poke_left').stats[2].base_stat,
+            defense : $('#custom_stats_left').data('poke_left').stats[3].base_stat,
+            attack : $('#custom_stats_left').data('poke_left').stats[4].base_stat,
+            maxHP : $('#custom_stats_left').data('poke_left').stats[5].base_stat,
+            currentHP : 100,
+            moves : $('#fightBtn').data('moves_poke_left'),
+            frontSprite : $('#custom_stats_left').data('poke_left').sprites.front_default,
+            backSprite : $('#custom_stats_left').data('poke_left').sprites.back_default
+        },
+        poke2 : {
+            name : $('#custom_stats_right').data('poke_right').name,
+            type1 : $('#custom_stats_right').data('poke_right').types[0].type.name,
+            type2 : typeof $('#custom_stats_right').data('poke_right').types[1] === 'undefined' ? '' : $('#custom_stats_right').data('poke_right').types[1].type.name,
+            speed : $('#custom_stats_right').data('poke_right').stats[0].base_stat,
+            spDef : $('#custom_stats_right').data('poke_right').stats[1].base_stat,
+            spAtk : $('#custom_stats_right').data('poke_right').stats[2].base_stat,
+            defense : $('#custom_stats_right').data('poke_right').stats[3].base_stat,
+            attack : $('#custom_stats_right').data('poke_right').stats[4].base_stat,
+            maxHP : $('#custom_stats_right').data('poke_right').stats[5].base_stat,
+            currentHP : 100,
+            moves : $('#fightBtn').data('moves_poke_right'),
+            frontSprite : $('#custom_stats_right').data('poke_right').sprites.front_default,
+            backSprite : $('#custom_stats_right').data('poke_right').sprites.back_default
+        }
     };
 
     $.ajax({
@@ -527,6 +557,7 @@ function sendFightData() {
         contentType: 'application/json',
         success: function(result) {
             console.log(result._id.$oid);
+            window.location.href = '/battle.html?id='+result._id.$oid;
         }
     });
 }
@@ -534,17 +565,37 @@ function sendFightData() {
 
 function checkMove(checkbox) {
 
-    //getCheckSide(checkbox);
-    //compter
-    //si > 4 disable tous les checkbox checked = false
-    //si > 1 vérifier data du bouton fight
-        //si présence poke_left (utiliser getSide() et getContainerSide())
-        //si présence poke_right
-        //display bouton fight
-        //sinon display none bouton fight
-    //si uncheck et moves < 1 poke_left/right = null
-    //('#fightBtn').data("poke_" + getCheckSide(checkbox),)
-    console.log($(checkbox).data('move'));
+    var side = getCheckSide(checkbox);
+    
+    if ($('table#moves_' + side + ' input:checkbox:checked').length <= 4) {        
+        $('table#moves_' + side + ' input[type=checkbox]').removeAttr('disabled');
+
+        //On décoche, on retire le move
+        if (!$(checkbox).is(':checked')) {
+
+            var tmp = $('#fightBtn').data('moves_poke_'+side);
+
+            $.each(tmp, function(i){
+                if(tmp[i].name === $(checkbox).data('move').name) {                    
+                    tmp.splice(i,1);
+                    return false;
+                }
+            });
+                        
+            $('#fightBtn').data('moves_poke_'+side, tmp);            
+            //console.log($('#fightBtn').data('moves_poke_'+side));
+        }
+
+        //on ajoute les valeurs du move
+        else {
+
+            $('#fightBtn').data('moves_poke_'+side).push($(checkbox).data('move'));
+            //console.log($('#fightBtn').data('moves_poke_'+side));
+        }
+
+        if ($('table#moves_' + side + ' input:checkbox:checked').length == 4)
+            $('table#moves_' + side + ' input[type=checkbox]:not(:checked)').attr('disabled','true');
+    }
 }
 
 
